@@ -1,0 +1,50 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[pdftex]{graphicx}
+  \graphicspath{../graphics}
+  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+
+\usepackage{cite}
+
+\usepackage[cmex10]{amsmath}
+  \interdisplaylinepenalty=2500
+
+\bibliographystyle{IEEEtran}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\title{An On-Line Visual Driver Aid for Safe and Precise Convoy Following in Visibility-Impaired Conditions}
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{
+  \IEEEauthorblockN{Robert Cofield, Scott Martin and David Bevly}
+  \IEEEauthorblockA{
+    GPS \& Vehicle Dynamics Laboratory (GAVLab)\\
+    Auburn University\\
+    % Email: robertgcofield@auburn.edu
+  }
+}
+
+%%%%%%%%% DOCUMENT BEGINNING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%
+%% Top Matters %%
+%%%%%%%%%%%%%%%%%
+
+\maketitle
+
+\begin{abstract}
+  \input{abstract}
+\end{abstract}
+
+\input{sec_intro}
+
+%%%%% Bibliography %%%%%
+\nocite{ScottThesis}
+\bibliography{../bib/master}
+
+
+\end{document}
