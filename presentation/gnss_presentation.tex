@@ -13,10 +13,10 @@
 \usepackage{siunitx}
 \usepackage{amsmath}
 \usepackage{graphicx,subfigure}
-\usepackage[style = ieee, maxcitenames = 1, mincitenames=1,backend=bibtex]{../sty/biblatex}
+\usepackage[maxcitenames = 1, mincitenames=1,backend=bibtex]{biblatex}
 \usepackage{multicol}
+% \usepackage{../sty/media9/media9}
 
-\usepackage{media9}
 \bibliography{../bib/master.bib}
 
 \usepackage[utf8]{inputenc}
@@ -32,9 +32,7 @@
 
 \newcommand{\citeitem}[1]{\emph{\citeyear{#1}}--\Citeauthor*{#1}, \citetitle{#1} }
 
-\AtBeginSection[]
-
-{
+\AtBeginSection[] {
   \begin{frame}<beamer>
     \frametitle{Section Outline}
     \tableofcontents[currentsection,hideallsubsections]
