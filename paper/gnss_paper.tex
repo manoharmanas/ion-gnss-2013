@@ -3,35 +3,44 @@
 %%%%%%%%%%%% PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage[pdftex]{graphicx}
-  \graphicspath{../graphics}
-  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+  % \graphicspath{../graphics}
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \usepackage{cite}
 \usepackage[cmex10]{amsmath}
-  \interdisplaylinepenalty=2500
-
 \usepackage[sf,sl,outermarks]{titlesec}
-  \titleformat{\section}
-    {\bfseries\MakeUppercase}{\thesection}{1em}{}
-  \titlespacing{\section}
-    {0pc}{\baselineskip}{0.5ex}
+\usepackage{caption}
+\usepackage{mathptmx}
+\usepackage{titling}
 
 %%%%%%%%%%% STYLE SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 \bibliographystyle{IEEEtran}
 
+%% section title formatting
+\titleformat{\section}  {\bfseries\MakeUppercase}{\thesection}{1em}{}
+\titlespacing{\section}  {0pt}{\baselineskip}{0pt}
+%% subsection title formatting
+\titleformat{\subsection}  {\bfseries\normalsize}{\thesubsection}{1em}{}
+\titlespacing{\subsection}  {0pt}{0pt}{-5pt}
+
+\pagenumbering{gobble} % turn off page numbering
+
 %% font stuff
-\usepackage{mathptmx}
 \renewcommand{\rmdefault}{ptm}
+\captionsetup[figure]{labelfont={small},textfont={it,footnotesize}}
+\captionsetup[table]{labelfont={small},textfont={it,footnotesize}}
+
+\interdisplaylinepenalty=2500
 
 %% geometry stuff %%
-\setlength{\textheight}{8.75in}
+\setlength{\droptitle}{-.6in} % title position
+\setlength{\textheight}{9.25in}
 \setlength{\columnsep}{2.0pc}
 \setlength{\textwidth}{6.8in}
-% \setlength{\footheight}{0.0in}
 \setlength{\topmargin}{0.25in}
 \setlength{\headheight}{0.0in}
-\setlength{\headsep}{0.0in}
+\setlength{\headsep}{-0.4in}
 \setlength{\oddsidemargin}{-.19in}
 \setlength{\parindent}{0pc}
 \setlength{\parskip}{\baselineskip}
@@ -59,11 +68,11 @@
 %%%%%%%%%%%%%%
 
 \begin{abstract}
+
   % good intro of what is being presented.
   A driver aid utilizing GNSS positioning is presented which will augment or replace visual cues in scenarios where line-of-sight is unreliable or unavailable, regardless of the ground-based deployment platform.
-
   % positioning algorithms used
-  Dynamic-base Real-Time Kinematic (DRTK) GPS is used to find a relative position from the leader to the follower, while the Time Differenced Carrier Phase (TDCP) measurement is used to compute the change in position of both vehicles.
+  Dynamic-base Real-Time Kinematic (DRTK) GPS is used to find a relative position from the leader to the follower, while the Time Differenced Carrier Phase (TDCP) measurement is used to compute the change in position of both vehicles over time.
 
   % Both of these measurements are recorded over time to yield the path taken by the leader relative to the follower with very high accuracy. The results are refined to preserve only information immediately relevant to the following task and presented on a Graphical User Interface (GUI). Relevant information may comprise distance to the nearest path point as measured along the vehicle's lateral axis (“path deviation”), curvilinear path spacing to adjacent lead vehicle, present velocity, and any associated risk factor. The primary risk factor examined is rear-end collision, which becomes increasingly probable during low-visibility conditions.
 
@@ -82,15 +91,101 @@
 
 \section*{Biography}
 
-  Robert Cofield is investigating navigation and positioning of ground and other vehicles using GNSS and fused sensor solutions. He works in the Auburn University GPS \& Vehicle Dynamics Laboratory.
+  Robert Cofield is investigating navigation of ground and other vehicles using GNSS and fused sensor solutions.  He works in the Auburn University GPS \& Vehicle Dynamics Laboratory.
 
 %%%%%%%%%%%%%%%%%%
 %% Introduction %%
 %%%%%%%%%%%%%%%%%%
 
-\section*{Introduction}
+\section*{Introduction} \label{sec:intro}
 
-  The use of vehicle convoys is common in transportation, where safety and path precision are frequently desired.  Extremely close spacing can be used to reduce fuel costs, but introduces a collision risk.  In other cases, when traveling over a path that has unstable or dangerous areas nearby, a following vehicle attempts to stay within the track of a vehicle ahead. When visibility is impaired, the ability of any convoy driver to adhere to a path of known safety, and the ability to avoid colliding with the leader is significantly reduced. Real-time path fidelity information is sought which will enable the following driver to intuitively and safely maintain a high-fidelity execution of the desired path during situations in which the leader is either not directly visible or close enough that the risk of collision is imminent.
+  The use of vehicle convoys is common in transportation, where safety and path precision are frequently desired.  Extremely close spacing can be used to reduce fuel costs, but introduces a collision risk.  In other cases, when traveling over a path that has unstable or dangerous areas nearby, a following vehicle attempts to stay within the track of a vehicle ahead.  When visibility is impaired, the ability of any convoy driver to adhere to a path of known safety, and the ability to avoid colliding with the leader is significantly reduced.  Real-time path fidelity information is sought which will enable the following driver to intuitively and safely maintain a high-fidelity execution of the desired path during situations in which the leader is either not directly visible or close enough that the risk of collision is imminent.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Previous Work & Literature %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Literature} \label{sec:lit}
+
+  This work follows and builds upon that done by Martin in \cite{ScottThesis} and Travis in \cite{travisdiss}. 
+
+%%%%%%%%%%%%%%%%%
+%% GUI Display %%
+%%%%%%%%%%%%%%%%%
+
+\section*{Graphical User Interface} \label{sec:gui}
+
+  \begin{figure}[ht] \centering
+    \includegraphics[width=\columnwidth] {../graphics/final_design_data.png}
+    \caption{Qt GUI in normal operation} \label{fig:qt_normal}
+  \end{figure}
+
+  \begin{figure}[ht] \centering
+    \includegraphics[width=\columnwidth] {../graphics/earth_slow.png}
+    \caption{Google Earth GUI alerting user to slow and correct leftward} \label{fig:earth_alerts}
+  \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Experimentation Procedures & Results %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Experimentation} \label{sec:exper}
+
+  Experimental trials were conducted using three different testing scenarios: a lane-change test, a precision following test, and a zero landmark test.  
+
+  %% Lane-Change Test
+  \subsection*{Lane Change Test}
+
+    To produce binary pass-fail results, a maneuver common in typical roadway driving, the lane change, was used in a situation in which the maneuver could be replicated properly or improperly to produce a binary result.  This test takes place on the National Center for Asphalt Technology (NCAT) test track in Opelika, AL, which is a two lane, 1.7 mile oval with turns comparable to those found on an interstate highway.  The leader drives through a $180^{\circ}$ turn and upon exiting makes a lane change between any of six cones spaced $10~m$ apart along the center stripe at the start of the straightaway.  This event is visually obscured from the following driver, who has no foreknowledge of which cone pair will be chosen, so there is a 20\% chance of choosing the correct pair simply by guessing.
+
+  %% Precision Following Test %%
+  \subsection*{Precision Following Test}
+
+    % motivation
+    The lane change replication test is one example of implementing the path duplication tool, but does not produce the detailed results necessary for a formal conclusion favoring the usefulness of one GUI over the other.  Centimeter-level measurements are available, so it is of great interest to determine whether either tool enables a convoy driver to carry out the following task with this improved level of precision.
+    
+    % description
+    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Once reaching 45 mph, the magnitude of the leader’s ground plane velocity vector will vary according to position on the track.  Along the two $180^{\circ}$ turns it will be approximately 45 mph, and along the straightaways it will be approximately 65 mph.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts, and accumulate as little deviation over time as possible.
+    
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/precision_following_alert_percents.png}
+      \caption{Percentages of best runs from the precision following test in which alerts were incurred}
+      \label{fig:precision_following_alert_percents}
+    \end{figure}
+
+    % discussion
+    This test primarily focused on distinguishing which GUI best provided aid in path duplication; for a comparative analysis, the test was conducted with the aid of each GUI individually, then without any assistance information at all.  As this test was conducted in an environment equivalent to most American two-lane roads and the leader does not stray from the two outer lane markings, it was anticipated that the lateral deviation should be bounded by approximately the width of the road minus the track width of the widest vehicle, or $5.8~m$.  This allows for scrutiny of the deviation in greater detail than when the lateral deviation is not bounded by design.
+
+    \begin{table}[htbp] \centering \caption{Mean absolute deviation for the precision following test}
+    \begin{tabular}{r|c} 
+        GUI&    Mean abs. dev. \\ \hline\hline
+        Earth&      0.9677 m \\
+        Qt&   0.4719 m \\
+        Control&    0.2069 m \\ \hline   
+    \end{tabular} \label{tab:precision_dev_mean} \end{table}
+
+  %% Zero-Landmark Test %%
+  \subsection*{Zero-Landmark Test}
+
+    % motivation
+    The precision following test took place in an environment abundant in visual landmarks by which to localize, such as lane markings and road signs.  Given the motivation for these tools, it is necessary to examine the performance of both GUIs in a situation where this type of assistance is denied.  The zero landmark test was therefore constructed to determine the impact of removing visual awareness of surrounds as well as waypoints along the leaders path to assist in replicating it.
+    
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/zero_landmark_alert_percents.png}
+      \caption{Percentages of best runs from the zero landmark test in which alerts were incurred}
+      \label{fig:zero_landmark_alert_percents}
+    \end{figure}
+
+    % test description
+    Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended present a path with is difficult to follow while the following vehicle attempted to adhere to the path as well as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
+
+    \begin{table}[htbp] \centering \caption{Mean absolute deviation for the zero landmark test}
+    \begin{tabular}{r|c} 
+        GUI&    Mean abs. dev. \\ \hline\hline
+        Earth&      2.7404 m \\
+        Qt&   3.6830 m \\
+        Control&    0.7267 m \\ \hline   
+    \end{tabular} \label{tab:zero_dev_mean} \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,12 +194,18 @@
 
 \section*{Conclusions \& Future Work}
 
+  %% summary
+  Two graphical tools were developed to assist drivers in convoys with high fidelity to the lead vehicle’s path while maintaining a safe spacing between them.  Experimentation reveals that they were quite effective in helping to enforce safe curvilinear following distances, while more development is needed to optimize results for lateral path deviation.  
+
+  %% improvements - overlay prediction
+  The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the follower’s path in realtime given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately 1 s required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window, but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Bibliography %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\nocite{ScottThesis}
+\nocite{CofieldUGThesis}
 \bibliography{../bib/master}
 
 

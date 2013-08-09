@@ -1,0 +1,48 @@
+\documentclass{beamer}
+\usetheme[hideothersubsections]{AUTheme}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{bibliography item}[text]%,
+\setbeamertemplate{footline}[frame number]
+
+\usepackage[scaled]{helvet}
+
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{epstopdf}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{graphicx,subfigure}
+\usepackage[style = ieee, maxcitenames = 1, mincitenames=1,backend=bibtex]{../sty/biblatex}
+\usepackage{multicol}
+
+\usepackage{media9}
+\bibliography{../bib/master.bib}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{hypcap}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\title[PVDF Collision Sensor]{High-Dynamic Range Collision Detection using Piezoelectric Polymer Films for Planar and Non-planar Applications}
+\author[J. M. Wooten]{ James Michael Wooten\\ {\small David M. Bevly, Co-Chair, Professor of Mechanical Engineering\\ John Hung, Co-Chair, Professor of Electrical and Computer Engineering\\ Dan Marghitu, Professor of Mechanical Engineering}} 
+
+\date{August 3, 2013} %date of graduation
+
+\newcommand{\citeitem}[1]{\emph{\citeyear{#1}}--\Citeauthor*{#1}, \citetitle{#1} }
+
+\AtBeginSection[]
+
+{
+  \begin{frame}<beamer>
+    \frametitle{Section Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\end{document}
