@@ -1,0 +1,718 @@
+\ProvidesPackageRCS $Header:
+/cvsroot/latex-beamer/latex-beamer/themes/theme/beamerthemeAUTheme.sty,v
+1.10 2004/10/07 20:53:10 bourke Exp $
+
+% This theme modifies the PaloAlto, sidebar, and sidebartab beamer themes
+% Modifications by Chris Bourke
+% Last modified 3/7/05
+
+%% Modifictaions to above and Til Tantau's beamer themes to conform to AU
+%% colors by Manu Parmar, Feb. 2007
+
+
+% BEGIN sidebar dimension setup
+\newdimen\beamer@sidebarwidth
+\newdimen\beamer@headheight
+\usebeamerfont{frametitle}
+\beamer@sidebarwidth=2.5\baselineskip
+\beamer@headheight=2.5\baselineskip
+\reset@font
+
+\def\beamer@lefttext{left}
+\definecolor{AU@Orange}{RGB}{255, 150, 0}
+
+% Package options
+
+\DeclareOptionBeamer{hideothersubsections}[]{\beamer@nav@subsectionstyle{show/show/hide}}
+\DeclareOptionBeamer{hideallsubsections}[]{\beamer@nav@subsectionstyle{hide}}
+
+\DeclareOptionBeamer{width}{\beamer@sidebarwidth=#1}
+\DeclareOptionBeamer{height}{\beamer@headheight=#1}
+\DeclareOptionBeamer{left}{\def\beamer@sidebarside{left}}
+\DeclareOptionBeamer{right}{\def\beamer@sidebarside{right}}
+\ExecuteOptionsBeamer{left}
+\ProcessOptionsBeamer
+
+% Default mode (<presentation> encompasses <beamer>, <handout>, and <trans> (transparencies))
+\mode<beamer>
+
+% All Beamer Boxes will be rounded with a drop shadow
+\useinnertheme[shadow=true]{rounded}
+%\useinnertheme{circles}
+
+% cut-pasted-n-hacked sidebar theme
+\ifdim\beamer@headheight>0pt
+% if head height is 0pt, use default frame title
+
+  \setbeamercolor*{frametitle}{parent=sidebar}
+
+  \defbeamertemplate*{frametitle}{sidebar theme}
+  {%
+    \nointerlineskip%
+    \vskip-\beamer@headheight%
+    \vbox to \beamer@headheight{%
+      \vfil
+      \leftskip=-\beamer@leftmargin%
+      \advance\leftskip by0.3cm%
+      \rightskip=-\beamer@rightmargin%
+      \advance\rightskip by0.3cm plus1fil%
+      {\usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}\insertframetitle\par}%
+      {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+      \vbox{}%
+      \vskip-1em%
+      \vfil
+    }%
+  }
+
+  \defbeamertemplate*{headline}{sidebar theme}
+  {%
+    \begin{beamercolorbox}[wd=\paperwidth]{frametitle}
+      \ifx\beamer@sidebarside\beamer@lefttext%
+      \else%
+        \hfill%
+      \fi%
+      \ifdim\beamer@sidebarwidth>0pt%
+        \usebeamercolor[bg]{logo}%
+        \vrule width\beamer@sidebarwidth height \beamer@headheight%
+        \hskip-\beamer@sidebarwidth%
+        \hbox to \beamer@sidebarwidth{\hss\vbox to
+          \beamer@headheight{\vss\hbox{\color{fg}\insertlogo}\vss}\hss}%
+      \else%
+        \vrule width0pt height \beamer@headheight%
+      \fi%
+    \end{beamercolorbox}
+  }
+\fi
+
+
+\def\beamer@sidebarformat#1#2#3{%
+  \begin{beamercolorbox}[wd=\beamer@sidebarwidth,leftskip=#1,rightskip=1ex plus1fil,vmode]{#2}
+    \vbox{}%
+    #3\par%
+    \vbox{}%
+    \vskip-1.5ex%
+  \end{beamercolorbox}
+}
+
+\defbeamertemplate*{section in sidebar}{sidebar theme}
+{%
+  \vbox{%
+    \vskip1ex%
+    \beamer@sidebarformat{3pt}{section in sidebar}{\insertsectionhead}%
+  }%
+}
+
+\defbeamertemplate*{section in sidebar shaded}{sidebar theme}
+{%
+  \vbox{%
+    \vskip1ex%
+    \beamer@sidebarformat{3pt}{section in sidebar shaded}{\insertsectionhead}%
+  }%
+}
+
+\defbeamertemplate*{subsection in sidebar}{sidebar theme}
+{%
+  \beamer@sidebarformat{5pt}{subsection in sidebar}{\insertsubsectionhead}%
+}
+
+\defbeamertemplate*{subsection in sidebar shaded}{sidebar theme}
+{%
+  \beamer@sidebarformat{5pt}{subsection in sidebar shaded}{\insertsubsectionhead}%
+}
+
+
+\ifdim\beamer@sidebarwidth>0pt
+
+                                % Sidebar
+  \setbeamersize{sidebar width \beamer@sidebarside=\beamer@sidebarwidth}
+  \defbeamertemplate*{sidebar \beamer@sidebarside}{sidebar theme}
+  {
+    \beamer@tempdim=\beamer@sidebarwidth%
+    \advance\beamer@tempdim by -6pt%
+    {\usebeamerfont{title in sidebar}%
+      \vskip1.5em%
+      \hskip3pt%
+      \usebeamercolor[fg]{title in sidebar}%
+      \insertshorttitle[width=\beamer@tempdim,center,respectlinebreaks]\par%
+      \vskip1.25em%
+    }%
+    {%
+      \hskip3pt%
+      \usebeamercolor[fg]{author in sidebar}%
+      \usebeamerfont{author in sidebar}%
+      \insertshortauthor[width=\beamer@tempdim,center,respectlinebreaks]\par%
+      \vskip1.25em%
+    }%
+    \insertverticalnavigation{\beamer@sidebarwidth}%
+    \vfill
+    \ifx\beamer@sidebarside\beamer@lefttext%
+    \else%
+      \usebeamercolor{normal text}%
+      \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+      \vskip2pt%
+    \fi%
+  }%
+
+  \ifx\beamer@sidebarside\beamer@lefttext%
+    \defbeamertemplate*{sidebar right}{sidebar theme}
+    {%
+      \vfill%
+      \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+      \vskip2pt}
+  \fi
+                                % Margins
+  \setbeamersize{text margin left=0.5cm,text margin right=0.5cm}
+\fi
+
+%\usecolortheme{sidebartab} cut-pasted-n-hacked:
+\setbeamercolor*{section in sidebar shaded}{parent=palette sidebar secondary}
+\setbeamercolor*{section in sidebar}
+  {parent=section in sidebar shaded,use={sidebar,section in sidebar shaded},%
+   fg=AU@Orange,bg=AU@Blue}
+
+\setbeamercolor*{subsection in sidebar shaded}{parent=palette sidebar primary}
+\setbeamercolor*{subsection in sidebar}
+  {parent=subsection in sidebar shaded,use=section in sidebar,%
+   bg=section in sidebar.bg, % We simply inherit the section properties
+   fg=section in sidebar.fg} % Here too.
+
+% We use *part* of the outer theme "shadow" but without the "split" theme
+% This gives us a (hacked) drop shadow on the sidebar and frametitle bar
+\pgfdeclarehorizontalshading[frametitle.bg,frametitle right.bg]{beamer@frametitleshade}{\paperheight}{%
+  color(0pt)=(frametitle.bg);
+  color(\paperwidth)=(frametitle right.bg)}
+
+\AtBeginDocument{
+  %
+  \pgfdeclareverticalshading{beamer@topborder}{\paperwidth}{%
+    color(0pt)=(black);
+    color(1pt)=(black)}
+  \pgfdeclarehorizontalshading{beamer@sideborder}{\paperheight}{%
+    color(0pt)=(black);
+    color(1pt)=(black)}
+
+  \pgfdeclareverticalshading{beamer@topshade}{\paperwidth}{%
+    color(0pt)=(bg);
+    color(4pt)=(black!50!bg)}
+  \pgfdeclareverticalshading{beamer@topshadesidebarcover}{\beamer@sidebarwidth}{%
+    color(0pt)=(AU@Orange);
+    color(4pt)=(AU@Orange)}
+  \pgfdeclareverticalshading{beamer@topshadesidebarcoverwhite}{6pt}{%
+    color(0pt)=(white);
+    color(4pt)=(white)}
+
+  \pgfdeclarehorizontalshading{beamer@sideshade}{\paperheight}{%
+    color(0pt)=(black!50!bg);
+    color(4pt)=(bg)}
+% An attempt at getting the shadings to meet nicely, FAILED
+%  \pgfdeclarehorizontalshading{beamer@sidediagshade}{5.66pt}{%
+%    color(0pt)=(green!50!bg);
+%    color(5.66pt)=(bg)}
+}
+
+\addtobeamertemplate{headline}
+{}
+{%
+%  \vskip-0.2pt
+%drop-shadow:
+%old: \hskip\beamer@sidebarwidth\hskip.2cm\pgfuseshading{beamer@topshade}
+%\hskip\beamer@sidebarwidth\pgfuseshading{beamer@topshadesidebarcoverwhite}\pgfuseshading{beamer@topshade}
+%border: \hskip\beamer@sidebarwidth\hskip.2cm\pgfuseshading{beamer@topborder}
+% Attempted to combine two drop shadows in a transition, failed
+%*** TRY HERE INSTEAD: declare a horizontal shade, rotate it 45 degrees and clip it.
+%  \pgfmoveto{\pgfxy{0,0}}
+%  \pgflineto{\pgfxy{0,-2}}
+%  \pgflineto{\pgfxy{-2,-2}}
+%  \pgflineto{\pgfxy{2,-2}}
+%  \pgflineto{\pgfxy{2,2}}
+%  \pgflineto{\pgfxy{2,0}}
+%  \pgflineto{\pgfxy{0,0}}
+%  \pgfclip
+  \vskip-4pt
+  \pgfuseshading{beamer@topshadesidebarcover}
+  \vskip-2pt
+}
+
+% Add page numbering to bottom left.
+\addtobeamertemplate{footline}
+{%
+   \usebeamercolor[fg]{author in sidebar}
+   \vskip-1cm\hskip10pt
+%  \insertpagenumber\,/\,\inserttotalpagenumber\kern1em\vskip2pt%
+	 \insertframenumber\,/\,\inserttotalframenumber\kern1em\vskip2pt%
+}
+
+\addtobeamertemplate{sidebar \beamer@sidebarside}
+{}
+{
+%Want to "rewind" to the top of the sidebar, but how?
+%drop-shadow:
+\vskip-\paperwidth\hskip\beamer@sidebarwidth\pgfuseshading{beamer@sideshade}
+%border: \vskip-\paperwidth\hskip\beamer@sidebarwidth\pgfuseshading{beamer@sideborder}
+}
+% End Shadow
+
+\usecolortheme[RGB={17,17,140}]{structure}
+
+% Complete color themes:
+% albatross, beetle, crane, dove, fly, seagull
+
+% Inner color themes:
+% lily, orchid, rose
+
+% Outer color themes:
+% whale, seahorse, dolphin(?)
+
+\usecolortheme{orchid} % Establishes inner, dark colors
+\usecolortheme{whale}  % Establishes outer, dark colors
+
+% Customized Various Color elements:
+\setbeamercolor{titlelike}{fg=white,bg=AU@Orange} %
+\setbeamercolor{sidebar}{fg=AU@Blue}              %
+\setbeamercolor{frametitle}{fg=AU@Blue, bg=white}           %
+\setbeamercolor{title in sidebar}{fg=white}      %
+\setbeamercolor{author in sidebar}{fg=white}    %
+%\setbeamercolor{section in sidebar}{fg=yellow}     These two do not load (are overwritten) if
+%\setbeamercolor{subsection in sidebar}{fg=yellow}  you use the sidebartab
+\setbeamercolor{section in sidebar shaded}{fg=white}
+\setbeamercolor{subsection in sidebar shaded}{fg=AU@Blue}
+
+%\setbeamertemplate{blocks}[rounded]{shadow=true}
+\setbeamercolor{block title}{fg=white,bg=black}
+\setbeamercolor{block body}{fg=black,bg=AU@VeryLightGrey}
+
+% Defines the tango palette for use with LaTeX.
+%
+% Copyright 2006 by Patrick Pletscher <pat _at_ pletscher.org>
+%
+% This program can be redistributed and/or modified under the terms
+% of the GNU Public License, version 2.
+
+% butter (yellowish)
+\definecolor{tabutter}{rgb}{0.98824, 0.91373, 0.30980}		% #fce94f
+\definecolor{ta2butter}{rgb}{0.92941, 0.83137, 0}		% #edd400
+\definecolor{ta3butter}{rgb}{0.76863, 0.62745, 0}		% #c4a000
+
+% orange
+\definecolor{taorange}{rgb}{0.98824, 0.68627, 0.24314}		% #fcaf3e
+\definecolor{ta2orange}{rgb}{0.96078, 0.47451, 0}		% #f57900
+\definecolor{ta3orange}{rgb}{0.80784, 0.36078, 0}		% #ce5c00
+
+% chocolate (brownish)
+\definecolor{tachocolate}{rgb}{0.91373, 0.72549, 0.43137}	% #e9b96e
+\definecolor{ta2chocolate}{rgb}{0.75686, 0.49020, 0.066667}	% #c17d11
+\definecolor{ta3chocolate}{rgb}{0.56078, 0.34902, 0.0078431}	% #8f5902
+
+% chameleon (greenish)
+\definecolor{tachameleon}{rgb}{0.54118, 0.88627, 0.20392}	% #8ae234
+\definecolor{ta2chameleon}{rgb}{0.45098, 0.82353, 0.086275}	% #73d216
+\definecolor{ta3chameleon}{rgb}{0.30588, 0.60392, 0.023529}	% #4e9a06
+
+% sky blue
+\definecolor{taskyblue}{rgb}{0.44706, 0.56078, 0.81176}		% #728fcf
+\definecolor{ta2skyblue}{rgb}{0.20392, 0.39608, 0.64314}	% #3465a4
+\definecolor{ta3skyblue}{rgb}{0.12549, 0.29020, 0.52941}	% #204a87
+
+% plum (violettish)
+\definecolor{taplum}{rgb}{0.67843, 0.49804, 0.65882}		% #ad7fa8
+\definecolor{ta2plum}{rgb}{0.45882, 0.31373, 0.48235}		% #75507b
+\definecolor{ta3plum}{rgb}{0.36078, 0.20784, 0.4}		% #5c3566
+
+% scarlet red
+\definecolor{tascarletred}{rgb}{0.93725, 0.16078, 0.16078}	% #ef2929
+\definecolor{ta2scarletred}{rgb}{0.8, 0, 0}			% #cc0000
+\definecolor{ta3scarletred}{rgb}{0.64314, 0, 0}			% #a40000
+
+% aluminium
+\definecolor{taaluminium}{rgb}{0.93333, 0.93333, 0.92549}	% #eeeeec
+\definecolor{ta2aluminium}{rgb}{0.82745, 0.84314, 0.81176}	% #d3d7cf
+\definecolor{ta3aluminium}{rgb}{0.72941, 0.74118, 0.71373}	% #babdb6
+
+% gray
+\definecolor{tagray}{rgb}{0.53333, 0.54118, 0.52157}		% #888a85
+\definecolor{ta2gray}{rgb}{0.33333, 0.34118, 0.32549}		% #555753
+\definecolor{ta3gray}{rgb}{0.18039, 0.20392, 0.21176}		% #2e3436
+
+% Set the AU logo, file must be in the latex path or working directory
+% Converted from AI source at 
+% https://fp.auburn.edu/ocm/150logos/AU%20tower%20logo%20v10.ai
+\setbeamercolor{logo}{fg=black,bg=white}
+\definecolor{c002B5C}{RGB}{0,43,92}
+\definecolor{cF58025}{RGB}{245,128,37}
+\logo{\hspace{0.27em}\begin{tikzpicture}[y=0.80pt, x=0.8pt,yscale=-0.141415, xscale=0.141415, inner sep=0pt, outer sep=0pt]
+\path[draw=black,line width=0.200pt] (182.2840,176.2640);
+\path[draw=black,line width=0.200pt] (115.1490,169.3930);
+\path[draw=black,line width=0.200pt] (121.1760,159.4360);
+\path[draw=black,line width=0.200pt] (155.6660,142.1420);
+  \path[fill=c002B5C] (14.1180,227.6710) .. controls (13.0950,230.6750) and
+    (10.4490,236.9310) .. (10.4490,239.8170) .. controls (10.4490,243.4830) and
+    (14.5990,243.4830) .. (17.3030,243.9070) -- (17.3030,244.8070) --
+    (0.8270,244.8070) -- (0.8270,243.9070) .. controls (6.1790,242.4640) and
+    (6.7210,241.2610) .. (8.5840,236.5670) -- (15.3770,218.8310) --
+    (18.9850,209.0280) .. controls (19.5270,207.4670) and (20.3080,206.0240) ..
+    (19.6480,204.8820) .. controls (21.2710,204.2180) and (22.7730,203.1380) ..
+    (24.0380,201.6320) -- (37.2650,236.8680) .. controls (38.8900,241.2610) and
+    (39.9110,243.0010) .. (44.7230,243.9070) -- (44.7230,244.8070) --
+    (27.0430,244.8070) -- (27.0430,243.9070) .. controls (29.1490,243.4250) and
+    (31.6750,242.7610) .. (31.6750,240.0570) .. controls (31.6750,237.5300) and
+    (29.3900,231.8770) .. (27.8260,227.6700) -- (14.1180,227.6700) --
+    cycle(20.7900,209.2690) -- (15.1370,224.9020) -- (27.0430,224.9020) --
+    (20.7900,209.2690) -- cycle;
+  \path[fill=c002B5C] (102.5340,203.9190) -- (102.5340,204.8210) .. controls
+    (97.0620,205.4210) and (96.7030,208.7880) .. (96.4630,216.7270) --
+    (96.1020,229.8930) .. controls (95.9200,237.6510) and (92.6140,245.5280) ..
+    (79.2650,245.5280) .. controls (60.6270,245.5280) and (62.5500,232.0570) ..
+    (62.5500,227.2510) -- (62.5500,213.7780) .. controls (62.3680,207.5850) and
+    (62.3090,205.7820) .. (55.0940,204.8210) -- (55.0940,203.9190) --
+    (75.8400,203.9190) -- (75.8400,204.8210) .. controls (67.9630,205.9620) and
+    (67.8400,207.1650) .. (67.8400,213.7780) -- (67.8400,226.1040) .. controls
+    (67.8400,227.2500) and (65.9170,242.7600) .. (82.3920,242.7600) .. controls
+    (95.3800,242.7600) and (94.1180,230.3730) .. (94.1180,223.0370) --
+    (94.1180,216.7260) .. controls (94.1180,209.0870) and (93.5150,205.6010) ..
+    (85.0990,204.8200) -- (85.0990,203.9180) -- (102.5340,203.9180) -- cycle;
+  \path[fill=c002B5C] (138.2510,223.2220) .. controls (143.7230,224.4820) and
+    (151.6000,227.0090) .. (151.6000,234.1050) .. controls (151.6000,245.2280) and
+    (137.2290,244.9880) .. (134.2230,244.9270) -- (117.6890,244.8080) --
+    (117.6890,243.9080) .. controls (124.9020,242.9450) and (124.9630,241.1380) ..
+    (125.1430,234.9450) -- (125.1430,214.0820) .. controls (124.9640,207.8890) and
+    (124.9030,206.0860) .. (118.0480,205.1800) -- (118.0480,204.2800) --
+    (130.2560,203.8000) .. controls (136.9900,203.5600) and (148.8960,204.2200) ..
+    (148.8960,213.7240) .. controls (148.8960,219.6170) and (143.0020,221.9000) ..
+    (138.2520,223.1030) -- (138.2520,223.2220) -- cycle(130.4350,234.4060) ..
+    controls (130.4350,239.0950) and (130.1330,243.5450) .. (136.2680,243.5450) ..
+    controls (141.4990,243.5450) and (145.1670,240.1150) .. (145.1670,234.8260) ..
+    controls (145.1670,231.1580) and (141.7400,223.8830) .. (132.7800,224.3030) --
+    (130.4350,224.4220) -- (130.4350,234.4060) -- cycle(130.4350,223.1620) ..
+    controls (136.0270,223.1010) and (142.9420,221.5960) .. (142.9420,214.6230) ..
+    controls (142.9420,207.4060) and (136.5670,205.1800) .. (130.4350,205.1800) --
+    (130.4350,223.1620) -- cycle;
+  \path[fill=c002B5C] (216.7800,203.9190) -- (216.7800,204.8210) .. controls
+    (211.3070,205.4210) and (210.9490,208.7880) .. (210.7090,216.7270) --
+    (210.3460,229.8930) .. controls (210.1660,237.6510) and (206.8600,245.5280) ..
+    (193.5100,245.5280) .. controls (174.8720,245.5280) and (176.7950,232.0570) ..
+    (176.7950,227.2510) -- (176.7950,213.7780) .. controls (176.6130,207.5850) and
+    (176.5550,205.7820) .. (169.3400,204.8210) -- (169.3400,203.9190) --
+    (190.0850,203.9190) -- (190.0850,204.8210) .. controls (182.2080,205.9620) and
+    (182.0860,207.1650) .. (182.0860,213.7780) -- (182.0860,226.1040) .. controls
+    (182.0860,227.2500) and (180.1630,242.7600) .. (196.6380,242.7600) .. controls
+    (209.6240,242.7600) and (208.3650,230.3730) .. (208.3650,223.0370) --
+    (208.3650,216.7260) .. controls (208.3650,209.0870) and (207.7610,205.6010) ..
+    (199.3450,204.8200) -- (199.3450,203.9180) -- (216.7800,203.9180) -- cycle;
+  \path[fill=c002B5C] (239.3280,216.3060) .. controls (239.3280,207.1050) and
+    (239.0300,205.7220) .. (232.2940,205.1220) -- (232.2940,204.2780) --
+    (246.9650,203.7980) .. controls (262.1160,203.3160) and (263.3190,210.7120) ..
+    (263.3190,213.5990) .. controls (263.3190,218.6520) and (260.1950,221.5380) ..
+    (255.8650,223.4620) -- (256.1630,223.8820) .. controls (260.7950,232.0010) and
+    (266.5680,242.3410) .. (276.4890,244.3880) -- (276.3090,245.2880) .. controls
+    (269.9360,244.9870) and (265.2440,245.1670) .. (261.7570,241.5580) .. controls
+    (257.7890,237.4120) and (254.6620,232.1190) .. (253.3980,229.5350) .. controls
+    (250.9930,224.5450) and (248.8280,225.9880) .. (244.6200,225.2650) --
+    (244.6200,234.9450) .. controls (244.6200,241.5580) and (244.7420,242.7610) ..
+    (252.9780,243.9080) -- (252.9780,244.8080) -- (231.8740,244.8080) --
+    (231.8740,243.9080) .. controls (239.0870,242.9450) and (239.1480,241.1380) ..
+    (239.3280,234.9450) -- (239.3280,216.3060) -- cycle(244.6200,224.2420) ..
+    controls (250.3930,224.1850) and (257.1260,221.5390) .. (257.1260,214.8630) ..
+    controls (257.1260,207.8260) and (250.9320,205.0020) .. (244.6200,205.0620) --
+    (244.6200,224.2420) -- cycle;
+  \path[fill=c002B5C] (324.7730,235.3650) -- (324.4710,213.4200) .. controls
+    (324.4130,207.7090) and (322.8480,206.0250) .. (316.0550,204.8220) --
+    (316.0550,203.9200) -- (332.4710,203.9200) -- (332.4710,204.8220) .. controls
+    (328.3200,205.3630) and (327.5370,207.6460) .. (327.0560,211.5560) .. controls
+    (326.2160,218.1710) and (326.5180,232.6610) .. (326.8160,245.7710) --
+    (326.0370,245.9510) .. controls (316.4150,234.5860) and (305.7120,224.0620) ..
+    (295.5510,213.1190) -- (295.5510,224.1850) .. controls (295.5510,239.0950) and
+    (295.1880,242.1620) .. (303.9090,243.9080) -- (303.9090,244.8080) --
+    (285.9280,244.8080) -- (285.9280,243.9080) .. controls (294.0460,243.0640) and
+    (293.7480,237.5310) .. (293.7480,223.8830) -- (293.7480,214.8630) .. controls
+    (293.7480,208.8490) and (292.7860,206.5060) .. (285.1490,204.8220) --
+    (285.1490,203.9200) -- (295.0690,203.9200) -- (324.7730,235.3650) -- cycle;
+  \path[fill=cF58025] (331.5260,270.6440) -- (331.5260,268.2590) --
+    (0.0000,268.2590) -- (0.0000,270.6440);
+      \path[fill=cF58025,even odd rule] (165.0150,15.5450) -- (166.9580,16.1170) --
+        (178.1500,35.4910) -- (190.6380,35.4910) -- (192.3640,38.4000) --
+        (178.6220,38.5330) -- (173.9050,34.7420) -- (168.9090,38.7380) --
+        (165.0150,35.3820) -- (165.0150,17.1570) -- cycle;
+      \path[fill=cF58025,even odd rule] (190.1080,41.2220) -- (194.5800,52.2100) --
+        (182.1210,41.3910) -- (190.1080,41.2220) -- cycle;
+      \path[fill=cF58025,even odd rule] (151.9340,36.0630) -- (134.7150,36.0630) --
+        (137.8400,39.9970) -- (148.8850,39.9970) -- cycle;
+      \path[fill=cF58025,even odd rule] (125.2390,101.9830);
+      \path[fill=cF58025,even odd rule] (123.3270,101.7920);
+        \path[fill=cF58025] (181.4460,59.0640) .. controls (179.7640,60.0140) and
+          (179.3970,62.8280) .. (180.2010,66.3510) .. controls (179.9320,64.1950) and
+          (180.3100,62.5540) .. (181.4010,61.9380) .. controls (183.6010,60.6960) and
+          (187.8640,64.0800) .. (190.9220,69.4970) .. controls (193.9820,74.9150) and
+          (194.6780,80.3140) .. (192.4770,81.5570) .. controls (191.7050,81.9930) and
+          (190.6740,81.8490) .. (189.5350,81.2560) .. controls (191.5100,82.6860) and
+          (193.3610,83.2090) .. (194.6630,82.4740) .. controls (197.4050,80.9260) and
+          (196.6690,74.4300) .. (193.0190,67.9650) .. controls (189.3690,61.5000) and
+          (184.1880,57.5160) .. (181.4460,59.0640) -- cycle(211.0690,85.2280) --
+          (202.4260,72.8950) -- (205.2770,70.8420) -- (201.6280,67.5350) --
+          (204.2510,65.4820) -- (174.1460,39.5950) -- (168.6710,43.4720) --
+          (164.4020,39.4020) -- (164.4420,45.1050) -- (173.5750,54.5340) --
+          (170.8380,62.2890) -- (165.0150,56.1880) -- (165.0150,72.1550) --
+          (172.6250,78.7850) -- (174.2740,76.0860) -- (200.5010,96.9380) --
+          (200.5820,101.2920) -- (205.7430,104.5180) -- (205.0880,89.0210) --
+          (211.0690,85.2280) -- cycle(196.0260,86.8240) .. controls (192.3090,88.9220)
+          and (184.3940,82.8560) .. (179.7410,74.6100) .. controls (175.0850,66.3650)
+          and (174.5590,57.4910) .. (178.2750,55.3930) .. controls (179.9190,54.4650)
+          and (182.3530,54.9480) .. (184.9590,56.4840) -- (184.3840,52.4730) --
+          (190.4400,57.4950) -- (189.2870,59.8920) .. controls (191.1500,61.7390) and
+          (192.9300,64.0260) .. (194.3990,66.6300) .. controls (199.0570,74.8770) and
+          (199.7420,84.7260) .. (196.0260,86.8240) -- cycle;
+        \path[fill=cF58025] (131.2860,82.1330) .. controls (129.3010,80.5700) and
+          (130.8130,75.3410) .. (134.6630,70.4550) .. controls (138.5150,65.5680) and
+          (143.2450,62.8730) .. (145.2300,64.4390) .. controls (145.9270,64.9880) and
+          (146.1840,65.9940) .. (146.0690,67.2720) .. controls (146.6420,64.9030) and
+          (146.4230,62.9920) .. (145.2490,62.0670) .. controls (142.7760,60.1180) and
+          (137.0460,63.2650) .. (132.4500,69.0960) .. controls (127.8560,74.9280) and
+          (126.1370,81.2330) .. (128.6100,83.1820) .. controls (130.1270,84.3770) and
+          (132.8690,83.6500) .. (135.8220,81.5680) .. controls (133.9310,82.6350) and
+          (132.2710,82.9080) .. (131.2860,82.1330) -- cycle;
+      \path[fill=cF58025] (165.0070,92.9330) -- (120.7120,118.8610) --
+        (120.7120,122.6080) -- (165.0070,97.2000) -- cycle;
+      \path[fill=cF58025] (154.8310,133.5240) -- (154.8310,128.9750) --
+        (124.3460,140.8740) -- (124.3460,144.1720) -- cycle;
+      \path[fill=cF58025,even odd rule] (122.7310,75.1000) -- (122.6010,89.8820) --
+        (114.7400,82.3430) -- (122.7310,75.1000) -- cycle;
+      \path[fill=cF58025,even odd rule] (133.8810,120.4740) -- (133.8810,132.9180) --
+        (129.1440,134.8500) -- (129.1440,122.7650);
+      \path[fill=cF58025,even odd rule] (142.7880,115.9820) -- (142.7880,129.1890) --
+        (137.8400,131.2560) -- (137.8400,118.4550);
+      \path[fill=cF58025,even odd rule] (151.9080,111.3960) -- (151.9340,125.3720) --
+        (146.8360,127.5270) -- (146.8360,113.9160);
+      \path[fill=cF58025,even odd rule] (124.8540,170.9090) .. controls
+        (124.8540,170.9090) and (125.4020,155.7670) .. (125.5940,153.7870) .. controls
+        (125.9570,150.0420) and (133.0230,147.5650) .. (132.7810,153.3640) --
+        (132.4640,172.9170) -- (124.8540,170.9090) -- cycle;
+      \path[fill=cF58025,even odd rule] (140.1800,174.9250) .. controls
+        (140.1800,174.9250) and (140.6540,153.2280) .. (140.7990,150.4260) .. controls
+        (140.9870,146.7940) and (149.6990,142.6650) .. (150.5070,149.5700) --
+        (150.5070,177.6330) -- (140.1800,174.9250) -- cycle;
+      \path[fill=cF58025,even odd rule] (191.3990,77.4090) -- (191.3990,75.6880) --
+        (187.5250,72.8900) -- (187.5250,66.8650) -- (186.4500,65.5740) --
+        (186.0200,73.5360) -- cycle;
+        \path[fill=cF58025,even odd rule] (206.0770,108.8590) -- (198.4140,104.1250) --
+          (200.3100,101.8680) -- (174.4250,81.6350) -- (172.5430,84.5520) --
+          (165.0150,78.0550) -- (165.0020,92.7120) -- (206.8870,120.8950) --
+          (206.0770,108.8590) -- cycle(207.1650,125.0290) -- (165.0000,97.3820) --
+          (165.0180,181.1650) -- (210.1500,169.3930) -- (207.1650,125.0290) -- cycle;
+      \path[fill=cF58025] (120.6990,158.9610);
+      \path[fill=cF58025] (155.8820,138.3150);
+      \path[fill=cF58025] (121.2140,155.2260);
+      \path[fill=cF58025] (156.3970,134.5800);
+      \path[fill=cF58025,even odd rule] (122.5470,97.4170) -- (152.4920,77.9250) --
+        (152.4920,55.4340) -- (157.9340,60.7040) -- (157.9340,87.6170) --
+        (154.2500,87.0380) -- (154.3460,80.4400) -- (148.5140,84.2530) --
+        (148.5140,88.7380) -- (133.7130,98.1580) -- (133.6420,102.4760) --
+        (127.6450,106.5240) -- (125.5460,104.5750) -- (130.6800,101.1040) --
+        (130.7930,95.8780) -- (125.3960,99.3280);
+      \path[fill=cF58025,even odd rule] (148.4430,89.9670) -- (154.7950,85.8220) --
+        (157.9340,87.6170) -- (151.1090,91.8010) -- cycle;
+    \path[fill=cF58025,even odd rule] (165.0150,16.8090) -- (165.0150,0.6460) --
+      (168.0970,0.0000) -- (168.0970,6.8610) -- (172.1830,3.8120) --
+      (173.3930,5.9890) -- (168.4230,9.7930) -- (172.9370,13.8310) --
+      (171.4730,16.3010) -- (168.0970,13.8470) -- (168.0970,18.7880) -- cycle;
+    \path[fill=cF58025,even odd rule] (163.5580,7.4850) -- (159.8780,4.8050) --
+      (157.9240,7.3170) -- (161.5850,10.0790) -- cycle;
+    \path[fill=cF58025,even odd rule] (159.8690,39.0630) -- (153.2640,33.1930) --
+      (118.0530,60.7790) -- (123.4360,64.5910) -- (119.1740,67.9560) --
+      (122.5470,70.1280) -- (136.1800,59.7530) -- (134.9650,56.3630) --
+      (141.3010,51.4890) -- (140.5280,56.4430) -- (152.4920,47.3380) --
+      (152.4920,54.8350) -- (165.0150,45.6750) -- (165.0150,35.4910) -- cycle;
+  \path[fill=c002B5C] (45.3180,294.2160) -- (53.6050,294.2160) --
+    (53.6050,294.9600) .. controls (51.0550,295.6240) and (51.0550,296.0230) ..
+    (50.8420,300.4580) -- (50.6560,304.4420) .. controls (50.5760,306.5400) and
+    (50.5230,308.9300) .. (48.9830,310.5240) .. controls (47.4160,312.1700) and
+    (44.9990,312.7290) .. (42.7940,312.7290) .. controls (40.7220,312.7290) and
+    (38.2260,312.1980) .. (36.6590,310.7900) .. controls (34.8000,309.1160) and
+    (35.0650,306.5400) .. (35.0650,304.3100) -- (35.0650,300.1130) .. controls
+    (35.0650,295.3060) and (34.7200,295.4920) .. (31.5590,294.9610) --
+    (31.5590,294.2170) -- (42.0770,294.2170) -- (42.0770,294.9610) .. controls
+    (38.4110,295.2790) and (38.5710,296.5020) .. (38.5710,300.1130) --
+    (38.5710,303.8320) .. controls (38.5710,305.3730) and (38.4910,307.4710) ..
+    (39.3420,308.7990) .. controls (40.4050,310.4200) and (42.5560,311.0570) ..
+    (44.4150,311.0570) .. controls (48.7980,311.0570) and (49.4620,307.8690) ..
+    (49.3550,304.5770) -- (49.1690,298.1490) .. controls (49.0890,295.3070) and
+    (47.8150,295.4650) .. (45.3180,294.9610) -- (45.3180,294.2160) -- cycle;
+  \path[fill=c002B5C] (67.7080,300.1930) .. controls (67.7080,297.4570) and
+    (67.6280,295.5450) .. (64.2550,294.9610) -- (64.2550,294.2170) --
+    (70.3640,294.2170) .. controls (73.7110,298.5740) and (78.3320,302.9830) ..
+    (82.1570,307.4460) -- (82.2100,307.3930) -- (82.0510,298.9460) .. controls
+    (81.9980,295.7860) and (81.2010,295.3870) .. (78.0670,294.9620) --
+    (78.0670,294.2180) -- (86.1420,294.2180) -- (86.1420,294.9620) .. controls
+    (83.8050,295.1750) and (83.6720,296.2900) .. (83.6720,300.6200) --
+    (83.6720,312.4380) -- (82.4770,313.0240) .. controls (79.8740,309.8360) and
+    (73.5530,303.4610) .. (69.1700,298.7330) .. controls (69.0900,301.7080) and
+    (69.2230,304.4970) .. (69.3300,307.3930) .. controls (69.4360,310.6590) and
+    (70.0200,310.8720) .. (73.1550,311.5360) -- (73.1550,312.2800) --
+    (64.4430,312.2800) -- (64.4430,311.5360) .. controls (66.3820,311.1650) and
+    (67.7100,311.2700) .. (67.7100,307.6840) -- (67.7100,300.1930) -- cycle;
+  \path[fill=c002B5C] (103.9890,306.3820) .. controls (103.9890,311.1890) and
+    (104.3350,311.0030) .. (107.4950,311.5340) -- (107.4950,312.2780) --
+    (96.9780,312.2780) -- (96.9780,311.5340) .. controls (100.1390,311.0030) and
+    (100.4840,311.1880) .. (100.4840,306.3820) -- (100.4840,300.1120) .. controls
+    (100.4840,295.3050) and (100.1390,295.4910) .. (96.9780,294.9600) --
+    (96.9780,294.2160) -- (107.4960,294.2160) -- (107.4960,294.9600) .. controls
+    (104.3350,295.4910) and (103.9900,295.3060) .. (103.9900,300.1120) --
+    (103.9900,306.3820) -- cycle;
+  \path[fill=c002B5C] (120.7220,298.4410) .. controls (119.4210,295.4920) and
+    (119.3410,295.6520) .. (117.2690,294.9610) -- (117.2690,294.2170) --
+    (126.6980,294.2170) -- (126.6980,294.9610) .. controls (123.6440,295.6780) and
+    (123.4840,295.6780) .. (125.1570,299.6090) -- (128.8490,308.3750) --
+    (131.1600,302.5840) .. controls (134.0290,295.3870) and (133.2050,295.4920) ..
+    (129.8060,294.9610) -- (129.8060,294.2170) -- (138.1190,294.2170) --
+    (138.1190,294.9610) .. controls (135.6490,295.2790) and (135.0110,296.9810) ..
+    (133.1790,301.2560) -- (128.1330,313.0240) -- (127.0440,312.8110) --
+    (120.7220,298.4410) -- cycle;
+  \path[fill=c002B5C] (154.9060,303.6990) -- (154.9060,307.2050) .. controls
+    (154.9060,309.9140) and (154.9330,311.1640) .. (158.4650,311.1640) .. controls
+    (161.9180,311.1640) and (163.4050,309.2250) .. (164.1490,306.1700) --
+    (164.9460,306.1700) .. controls (164.9990,308.2420) and (164.6270,310.2870) ..
+    (163.9900,312.2790) -- (147.8940,312.2790) -- (147.8940,311.5350) .. controls
+    (151.0550,311.0040) and (151.4000,311.1890) .. (151.4000,306.3830) --
+    (151.4000,300.1130) .. controls (151.4000,295.3060) and (151.0550,295.4920) ..
+    (147.8940,294.9610) -- (147.8940,294.2170) -- (163.6180,294.2170) --
+    (163.1140,298.8650) -- (162.2900,298.8650) .. controls (162.1040,295.3860) and
+    (159.7400,295.3340) .. (156.8450,295.3340) -- (154.9060,295.3340) --
+    (154.9060,302.1050) -- (157.1640,302.1050) .. controls (159.4480,302.1050) and
+    (160.6430,301.9190) .. (161.3080,299.5030) -- (161.9980,299.5030) .. controls
+    (161.8650,301.7590) and (161.7590,303.9910) .. (161.8920,306.2490) --
+    (161.1480,306.2490) .. controls (160.6170,303.6450) and (159.3690,303.6980) ..
+    (157.0580,303.6980) -- (154.9060,303.6980) -- cycle;
+  \path[fill=c002B5C] (179.5540,299.3160) .. controls (179.5540,295.7300) and
+    (179.3680,295.2260) .. (176.0480,294.9610) -- (176.0480,294.2170) --
+    (184.3080,294.2170) .. controls (187.5760,294.2170) and (191.9850,294.2170) ..
+    (191.9850,298.4420) .. controls (191.9850,300.5400) and (190.3910,302.0810) ..
+    (188.5320,302.7970) .. controls (190.4980,306.6740) and (193.2330,310.8180) ..
+    (197.6160,311.8540) -- (197.5100,312.5980) .. controls (195.1460,312.4650) and
+    (192.4100,312.7030) .. (190.3380,311.2700) .. controls (188.9840,310.3130) and
+    (187.4430,307.8170) .. (186.6470,306.3310) .. controls (185.3990,303.9400) and
+    (185.5840,304.0990) .. (183.0610,303.7270) -- (183.0610,306.3830) .. controls
+    (183.0610,309.9940) and (182.9020,311.2170) .. (187.1780,311.5350) --
+    (187.1780,312.2790) -- (176.0490,312.2790) -- (176.0490,311.5350) .. controls
+    (179.2090,311.0040) and (179.5550,311.1890) .. (179.5550,306.3830) --
+    (179.5550,299.3160) -- cycle(183.0600,302.7960) .. controls
+    (185.5310,302.6100) and (188.0000,301.5480) .. (188.0000,298.6790) .. controls
+    (188.0000,295.9430) and (185.4500,295.2000) .. (183.0600,295.2000) --
+    (183.0600,302.7960) -- cycle;
+  \path[fill=c002B5C] (218.4650,299.5820) -- (217.6680,299.5820) .. controls
+    (217.1640,297.4040) and (216.5260,294.9880) .. (213.7900,294.9880) .. controls
+    (212.1700,294.9880) and (211.0810,296.1830) .. (211.0810,297.7500) .. controls
+    (211.0810,302.0530) and (219.8190,301.7600) .. (219.8190,307.3130) .. controls
+    (219.8190,311.1370) and (216.1540,312.7310) .. (212.7550,312.7310) .. controls
+    (210.8690,312.7310) and (209.0100,312.2270) .. (207.3620,311.3760) --
+    (206.4860,306.1180) -- (207.3090,305.9580) .. controls (208.1860,308.5620) and
+    (210.1240,311.5090) .. (213.2580,311.5090) .. controls (215.0120,311.5090) and
+    (216.3130,310.3680) .. (216.3130,308.6420) .. controls (216.3130,304.1520) and
+    (207.5750,304.5250) .. (207.5750,299.2650) .. controls (207.5750,295.7320) and
+    (210.9480,293.7670) .. (214.1880,293.7670) .. controls (215.7820,293.7670) and
+    (217.3490,294.1650) .. (218.7040,294.9620) -- (218.4650,299.5820) -- cycle;
+  \path[fill=c002B5C] (237.8540,306.3820) .. controls (237.8540,311.1890) and
+    (238.1990,311.0030) .. (241.3600,311.5340) -- (241.3600,312.2780) --
+    (230.8410,312.2780) -- (230.8410,311.5340) .. controls (234.0020,311.0030) and
+    (234.3480,311.1880) .. (234.3480,306.3820) -- (234.3480,300.1120) .. controls
+    (234.3480,295.3050) and (234.0020,295.4910) .. (230.8410,294.9600) --
+    (230.8410,294.2160) -- (241.3600,294.2160) -- (241.3600,294.9600) .. controls
+    (238.1990,295.4910) and (237.8540,295.3060) .. (237.8540,300.1120) --
+    (237.8540,306.3820) -- cycle;
+  \path[fill=c002B5C] (251.8780,299.3430) -- (252.4880,293.3660) --
+    (253.0460,293.3660) .. controls (253.3120,293.8450) and (253.6840,294.0830) ..
+    (254.0820,294.1630) .. controls (254.5070,294.2430) and (254.9590,294.2160) ..
+    (255.4360,294.2160) -- (266.6710,294.2160) .. controls (267.6270,294.2160) and
+    (268.5300,294.3490) .. (269.0620,293.3660) -- (269.6200,293.3660) --
+    (270.2310,299.3430) -- (269.4870,299.4760) .. controls (268.4240,295.7050) and
+    (266.4600,295.3330) .. (262.7940,295.3330) -- (262.7940,306.3820) .. controls
+    (262.7940,311.1890) and (263.1400,311.0030) .. (266.7780,311.5340) --
+    (266.7780,312.2780) -- (255.3030,312.2780) -- (255.3030,311.5340) .. controls
+    (258.9430,311.0030) and (259.2870,311.1880) .. (259.2870,306.3820) --
+    (259.2870,295.3330) .. controls (255.6220,295.3330) and (253.7090,295.7040) ..
+    (252.6200,299.4760) -- (251.8780,299.3430) -- cycle;
+  \path[fill=c002B5C] (290.7890,306.3820) .. controls (290.7890,309.9930) and
+    (290.6300,311.2160) .. (294.6410,311.5340) -- (294.6410,312.2780) --
+    (283.4320,312.2780) -- (283.4320,311.5340) .. controls (286.9380,311.0030) and
+    (287.2840,311.1880) .. (287.2840,306.3820) -- (287.2840,305.1590) --
+    (284.3090,299.1300) .. controls (283.1140,296.7140) and (282.7680,295.5710) ..
+    (279.8200,294.9600) -- (279.8200,294.2160) -- (289.0370,294.2160) --
+    (289.0370,294.9600) .. controls (287.1780,295.4390) and (286.3020,295.2260) ..
+    (287.8420,298.4660) -- (290.1530,303.3270) -- (291.5880,300.4050) .. controls
+    (293.8460,295.8090) and (293.3670,295.5710) .. (291.0040,294.9600) --
+    (291.0040,294.2160) -- (298.7330,294.2160) -- (298.7330,294.9600) .. controls
+    (296.4760,295.4390) and (295.3860,295.9950) .. (294.2970,297.9870) --
+    (291.2700,303.5920) -- (290.7910,304.6020) -- (290.7910,306.3820) -- cycle;
+\end{tikzpicture}
+}
+
+% Handout Mode - Using the default layouts, no menus, etc.
+\mode
+<handout>
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\useinnertheme{default}
+%reset shadow boxes to very light grey
+\setbeamercolor{block title}{fg=black,bg=AU@LightGrey} %
+\setbeamercolor{block body}{fg=black,bg=AU@VeryLightGrey} %
+
+% Settings for every mode
+\mode
+<all>
+%Two horrible hacks to get a "note page" after every slide.
+\newcommand{\noteframe}{
+\only<handout>{ %
+  \begin{frame}
+   \frametitle{Notes}
+   \begin{center}
+   \begin{tikzpicture}
+    \foreach \y in {0,1,2,3,4,5,6}
+     \draw[thick] (0,\y) -- (11,\y);
+   \end{tikzpicture}
+   \end{center}
+  \end{frame}
+  }%
+}
+
+\newcommand{\noteslide}{%to be used after every \framebreak
+\only<handout>{ %
+   \begin{center}
+   \begin{tikzpicture}
+    \foreach \y in {0,1,2,3,4,5,6}
+     \draw[thick] (0,\y) -- (11,\y);
+   \end{tikzpicture}
+   \end{center}
+   \framebreak
+   }%
+}
+
+% We declare the main color theme: Orange & Blue
+%\definecolor{taorange}{rgb}{0.98824, 0.68627, 0.24314}
+%\definecolor{AU@Orange}{RGB}{140,17,17}
+\definecolor{AU@Orange}{RGB}{255, 150, 0}
+% Alternate AU@Reds: 204,0,0 (AU.edu) <--seems to be the best
+%                     240,7,46 (logo)
+%                     255,25,25 (original)
+%                     140,17,17 ("Orange")
+%\definecolor{AU@Blue}{RGB}{245,240,219}
+\definecolor{AU@Blue}{RGB}{17,17,175}
+%Blue          245  240  219
+%Blue2         245  255  250 - Whitest
+%Dairy Blue    249  228  188 - more peachy
+%Blue Brulee   255  229  160 - peach
+%Blue Can      245  200   92 - Almost a peach
+%Coconut Blue  248  247  220 - More white
+\definecolor{AU@DarkGrey}{RGB}{35,35,35}
+\definecolor{AU@Grey}{RGB}{100,100,100}
+\definecolor{AU@LightGrey}{RGB}{200,200,200}
+\definecolor{AU@VeryLightGrey}{RGB}{225,225,225}
+
+
+% so we override example (greenish) and alerted (redish)
+\setbeamercolor{block title example}{fg=block title.fg,bg=block title.bg} %
+\setbeamercolor{block body example}{fg=block body.fg,bg=block body.bg} %
+\setbeamercolor{block title alerted}{fg=block title.fg,bg=block title.bg} %
+\setbeamercolor{block body alerted}{fg=block body.fg,bg=block body.bg} %
+\setlength{\parskip}{.25cm}
+%\def\mathfamilydefault{\rmdefault}\beamer@sansmathfalse
+%\usefonttheme[onlymath]{serif}
+\beamertemplatetheoremsunnumbered  %This suppresses theorem numbers
+%\setbeamertemplate{frametitle}[default][right]
