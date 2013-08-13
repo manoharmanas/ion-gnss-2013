@@ -16,12 +16,12 @@
 \usepackage[maxcitenames = 1, mincitenames=1,backend=bibtex]{biblatex}
 \usepackage{multicol}
 % \usepackage{../sty/media9/media9}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
 \usepackage{hypcap}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\title[DRTK Driver Assistance]{An On-Line Visual Driver Aid\\ for Safe and Precise Convoy Following\\ in Visibility-Impaired Conditions}
+\title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
 \author[]{Robert Cofield, Scott Martin, David Bevly}
 \date{September , 2013} 
 
@@ -50,20 +50,24 @@
 
   \subsection{DRTK}
 
+    %% brief explanation
     \begin{frame}{Dynamic base Real-Time Kinematic GNSS}
     \end{frame}
 
+    %% discuss accuracy
+
   \subsection{TDCP}
 
+    %% brief explanation
     \begin{frame}{Time-Differenced Carrier Phase GNSS}
     \end{frame}
 
+    %% discuss accuracy
+
   \subsection{Virtual Path}
 
+    %% discuss virtual leader & path summation
     \begin{frame}{Construction of Path}
-    \end{frame}
-
-    \begin{frame}{Elimination of Trailing Points}
     \end{frame}
 
 
@@ -96,6 +100,19 @@
     \begin{frame}{Google Earth GUI -- Controls}
     \end{frame}
 
+  \subsection{Middleware}
+
+    % talk about MOOS , etrc
+    \begin{frame}{Middleware}
+    \end{frame}
+
+    %% introduce interpolation
+    \begin{frame}{Interpolation}
+      \begin{figure}[ht] \centering
+        \includegraphics[width=4in] {../graphics/middleware_diagram.png}
+        \caption{Data input procedure} \label{fig:mw_diagram}
+      \end{figure}
+    \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Tests that were run & Results %%
@@ -117,8 +134,72 @@
       \end{figure}
     \end{frame}
 
-  \subsection{}
+  \subsection{Testing Procedures}
+
+    % Outline of tests
+    \begin{frame}{Testing Procedures}
+    \end{frame}
+
+    \begin{frame}{Lane Change Test}
+    \end{frame}
+
+    \begin{frame}{Precision Following Test}
+    \end{frame}
+
+    \begin{frame}{Zero Landmark Test}
+    \end{frame}
+
+  \subsection{Results}
+
+  %%% Lane Change Test
+    % What the drivers saw in each GUI during the lane change
+    \begin{frame}{Driver View}
+      \begin{figure}[ht] \centering
+        \begin{minipage}[b]{0.45\linewidth} \centering 
+          \includegraphics[width=\textwidth]{../graphics/lane_change.png}
+          \caption{Google Earth GUI approaching the lane change maneuver}
+        \end{minipage}
+        \hspace{0.5cm}
+        \begin{minipage}[b]{0.45\linewidth} \centering
+          \includegraphics[width=\textwidth]{../graphics/lane_change_mono.png} 
+          \caption{Qt GUI approaching the lane change maneuver}
+        \end{minipage}
+    \end{figure}
+    \end{frame}
+
+    % present data
+    \begin{frame}{Lane Change Test --- Results}
+    \end{frame}
+
+    % what happened
+    \begin{frame}{Lane Change Test --- Discussion}
+    \end{frame}
+
+  %%% Precision Following Test
+    % present data
+    \begin{frame}{Precision Following Test --- Results}
+    \end{frame}
+
+    % present data
+    \begin{frame}{Precision Following Test --- Discussion}
+    \end{frame}
+
+  %%% Zero Landmark Test
+    % present data
+    \begin{frame}{Zero Landmark Test ---  Results}
+    \end{frame}
+
+    % what happened
+    \begin{frame}{Zero Landmark Test ---  Discussion}
+    \end{frame}
 
 
+%%%%%%%%%%%%%%%%
+%% Conclusion %%
+%$%%%%%%%%%%%%%%
+\section{Conclusion}
+
+  \begin{frame}
+  \end{frame}
 
 \end{document}

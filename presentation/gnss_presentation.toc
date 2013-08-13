@@ -16,6 +16,14 @@
 \defcounter {refsection}{0}\relax 
 \beamer@subsectionintoc {2}{2}{Earth}{9}{0}{2}
 \defcounter {refsection}{0}\relax 
-\beamer@sectionintoc {3}{Experimentation}{11}{0}{3}
+\beamer@subsectionintoc {2}{3}{Middleware}{11}{0}{2}
 \defcounter {refsection}{0}\relax 
-\beamer@subsectionintoc {3}{1}{Hardware \& Setup}{12}{0}{3}
+\beamer@sectionintoc {3}{Experimentation}{13}{0}{3}
+\defcounter {refsection}{0}\relax 
+\beamer@subsectionintoc {3}{1}{Hardware \& Setup}{14}{0}{3}
+\defcounter {refsection}{0}\relax 
+\beamer@subsectionintoc {3}{2}{Testing Procedures}{17}{0}{3}
+\defcounter {refsection}{0}\relax 
+\beamer@subsectionintoc {3}{3}{Results}{21}{0}{3}
+\defcounter {refsection}{0}\relax 
+\beamer@sectionintoc {4}{Conclusion}{28}{0}{4}

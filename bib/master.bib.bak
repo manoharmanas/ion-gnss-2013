@@ -55,7 +55,6 @@
   school = {Auburn University},
   year = {2013},
   type = {Undergraduate Honors Thesis},
-  month = {May},
   owner = {rgcofield},
   timestamp = {2013.08.09}
 }
@@ -140,6 +139,48 @@
   owner = {rgcofield},
   timestamp = {2013.07.23},
   url = {http://www.mdpi.com/1424-8220/8/12/7973}
+}
+
+@INPROCEEDINGS{riblett2007,
+  author = {Riblett, L.E. and Wiseman, J.M.},
+  title = {TACNET: Mobile ad hoc Secure Communications Network},
+  booktitle = {Security Technology, 2007 41st Annual IEEE International Carnahan
+	Conference on},
+  year = {2007},
+  pages = {156-162},
+  abstract = {On the road and during tactical maneuvers, the Blue Force must maintain
+	situational awareness to effectively react and respond. The Tactical
+	Network, or TacNet, is a mobile ad hoc communications network developed
+	by Sandia National Laboratories to provide Blue Force personnel with
+	secure access to critical data, such as real-time maps of resource
+	positions. During development of the system, the Sandia team addressed
+	a variety of issues, including the need for (a) mobile communications
+	without fixed infrastructure and (b) security features, e.g., an
+	access control list. The team considered commercial-off-the-shelf
+	products, but determined that a semi-customized system would better
+	suit its requirements. The final product, TacNet, a field-tested
+	and proven mobile network, incorporates two major systems: (1) an
+	In-Vehicle System, including a graphical user interface, and (2)
+	a Dismounted Solution, also known as Tracker. TacNet employs a line-of-sight
+	mesh radio network, which is self-forming, self-healing, and multi-hopping.
+	Both the In- Vehicle and Tracker systems can be applied in combination
+	or separately to a variety of purposes, including real-time training
+	analysis, targeting capability, and friend or foe identification.
+	This paper describes the development process for TacNet and its future
+	potential, such as extending line-of-sight through unmanned aerial
+	vehicles.},
+  doi = {10.1109/CCST.2007.4373483},
+  keywords = {ad hoc networks;graphical user interfaces;military communication;mobile
+	communication;telecommunication security;Blue Force personnel;Sandia
+	National Laboratories;TacNet;Tactical Network;graphical user interface;mobile
+	ad hoc communications;mobile communications;mobile network;real-time
+	maps;secure communications network;tactical maneuvers;unmanned aerial
+	vehicles;Access control;Communication networks;Communication system
+	security;Data security;Laboratories;Mobile communication;National
+	security;Personnel;Roads;Target tracking;Blue Force;ad hoc communications
+	network;secure mobile communications;tracking},
+  owner = {rgcofield},
+  timestamp = {2013.08.13}
 }
 
 @MANUAL{projections,
