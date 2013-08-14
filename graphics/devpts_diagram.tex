@@ -1,0 +1,28 @@
+\begin{tikzpicture}[
+        scale=5,
+        axis/.style={thin, ->, >=stealth'},
+        every node/.style={circle, color=black}   ]
+    % axis
+    \draw[axis] (-0.1,0) -- (0.2,0) node(xline)[right] {$X$};
+    \draw[axis] (0,-0.1) -- (0,0.2) node(yline)[above] {$Y$};
+    % points
+    \coordinate (a) at (0.35,0.35);
+    \coordinate (b) at (0.6,0.6);
+    \coordinate (c) at (0.85,0.85);
+    \coordinate (d) at (0.85,0.35);
+    % right angle
+    \tkzMarkRightAngle[fill=gray!20,size=.05](a,b,d)
+    \node[draw,circle,inner sep=2pt,fill=blue] at (a) {};
+    \node[draw,circle,inner sep=2pt,fill=green] at (b) {};
+    \node[draw,circle,inner sep=2pt,fill=blue] at (c) {};
+    \node[draw,circle,inner sep=2pt,fill=red] at (d) {};
+    % point labels
+    \node [below left] at (a)  {$(x_1,y_1)$};
+    \node [left] at (b)  {$(x_3,y_3)$};
+    \node [above right] at (c) {$(x_2,y_2)$};
+    \node [below right] at (d) {$(x_0,y_0)$};
+    % path arrow
+    \draw[very thick,blue,->] (a) -- (c) node [pos=0.75, sloped, above, color=blue] {path};
+    % dev arrow
+    \draw[very thick,red,->] (d) -- (b) node [pos=0.5, sloped, above, color=red] {dev};
+\end{tikzpicture}
