@@ -1,3 +1,4 @@
+# latex
 *.aux
 *.bbl
 *.blg
@@ -5,3 +6,11 @@
 *.log
 *.pdf
 *.gz
+
+# beamer
+*.run.xml
+*-blx.bib
+*.nav
+*.out
+*.snm
+*.toc
