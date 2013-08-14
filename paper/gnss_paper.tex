@@ -3,8 +3,6 @@
 %%%%%%%%%%%% PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage[pdftex]{graphicx}
-  % \graphicspath{../graphics}
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \usepackage{cite}
 \usepackage[cmex10]{amsmath}
 \usepackage[sf,sl,outermarks]{titlesec}
@@ -13,6 +11,9 @@
 \usepackage{titling}
 
 %%%%%%%%%%% STYLE SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \graphicspath{../graphics}
+% \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 \bibliographystyle{IEEEtran}
@@ -31,7 +32,7 @@
 \captionsetup[figure]{labelfont={small},textfont={it,footnotesize}}
 \captionsetup[table]{labelfont={small},textfont={it,footnotesize}}
 
-\interdisplaylinepenalty=2500
+\interdisplaylinepenalty=5000
 
 %% geometry stuff %%
 \setlength{\droptitle}{-.6in} % title position
@@ -74,20 +75,11 @@
   % positioning algorithms used
   Dynamic-base Real-Time Kinematic (DRTK) GPS is used to find a relative position from the leader to the follower, while the Time Differenced Carrier Phase (TDCP) measurement is used to compute the change in position of both vehicles over time.
   % relative path vectorization
-  The relative path vector method \cite{travisdiss} is used to compute the positions of a virtual leader, i.e., a series of points representing where the leader was at previous time steps.
+  The relative path vector method proposed by \cite{travisdiss} is used to compute the positions of a virtual leader, i.e., a series of points representing where the leader was at previous time steps.
   % GUIs
   This path is then displayed to following drivers using two graphical user interfaces (GUIs): a minimalistic design relaying only necessary information, and a design incorporating satellite imagery to give the driver information to localize the displayed path.
   % testing
-  The effectiveness of these tools is then evaluated by recording following performance in various scenarios.
-
-  % Both of these measurements are recorded over time to yield the path taken by the leader relative to the follower with very high accuracy. The results are refined to preserve only information immediately relevant to the following task and presented on a Graphical User Interface (GUI). Relevant information may comprise distance to the nearest path point as measured along the vehicle's lateral axis (“path deviation”), curvilinear path spacing to adjacent lead vehicle, present velocity, and any associated risk factor. The primary risk factor examined is rear-end collision, which becomes increasingly probable during low-visibility conditions.
-
-
-  % For a given platform, vehicle dynamic characteristics will greatly influence the desired spacing and ground speed, as well as the ability to minimize lateral deviation from the path of a leader with dissimilar dynamics. Accordingly, a set of driver-input scalar parameters necessary for platform and scenario independence is determined by examining driver performance using the GUI with several 
-  
-  % From these trials, features to accept corresponding driver inputs are incorporated into the GUI such that modification is possible while driving without presenting a distraction from the driving task. This necessitates an interface view which is clean and devoid of non-essential information. Once this has been accomplished, safety warnings are refined without risk of damaging equipment. Ranges of acceptable braking are input by the driver for various safety hazard levels. Upon crossing one of these predetermined thresholds given instantaneous velocity or curvilinear following distance, a negative longitudinal acceleration violating a corresponding limit would be required to avoid collision with the leader. The appropriate warning is relayed to the driver warning of the risk.
-
-  % Testing is then performed in multiple platforms of varied dynamic characteristics to evaluate fidelity gains with respect to two variables: direct line-of-sight and visible cues. A performance improvement test is first conducted in environments benign to the following task, in which drivers are asked to perform a similar task both with and without the aid of the GUI presented. In this manner, fidelity gains are evaluated when the presence of lane markings and other visually distinct features make path replication much simpler. Another set of tests is then presented with terrain cues removed, similar to a desert driving scene without any objects or markings useful for relative localization. Line-of-sight is maintained throughout this test as well. Scenarios are then constructed which make high-fidelity path replication extremely difficult to impossible without aid; drivers are asked to replicate an intricate path without any line-of-sight or visual markers, using the GUI for navigation. In all test cases, simulated and actual, the metric by which driver performance is scored is based upon drivers' minimization of lateral deviation and ability to keep constant following distance goals. In instances where erratic paths result in rapidly changing ground speeds, a constant spacing may not be practical. In these instances, it is expected that a following driver should maintain a velocity equal to the leader's velocity at the same position. All of these qualifiers are analyzed in detail during post-processing. In this way the GUI will be shown to be significantly beneficial to aiding convoy drivers in high precision following.
+  The effectiveness of these tools is then evaluated by recording the path following performance in various scenarios.
 
 \end{abstract}
 
@@ -103,10 +95,13 @@
 %% Introduction %% Previous Work & Literature %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Introduction \& Previous Work \\ \textit{FINISH ME}}
+\section*{Introduction \& Previous Work}
 
   %%%%% Intro Blurb - why important %%%%%
   The use of vehicle convoys is commonly used in ground transportation, and both safety and path precision are often of cheif importance to this task.  Extremely close spacing can be used to reduce fuel costs, but introduces a collision risk.  In other cases, when traveling over a path that has unstable or dangerous areas nearby, a following vehicle attempts to stay within the track of a vehicle ahead.  When visibility is impaired, the ability of any convoy driver to adhere to a path of known safety, and to avoid colliding with the leader is significantly reduced.  Real-time path fidelity information is sought which will enable the following driver to intuitively and safely maintain a high-fidelity execution of the desired path during situations in which the leader is either not directly visible or close enough that the risk of collision is imminent.
+
+  % Problem specific - why two vehicles were used
+  For the convoy scenario, a caravan of $N$ vehicles attempting to travel along the same path may be broken down into $N-1$ leader-follower pairs.  These pairs may comprise each of the longitudinally adjacent vehicles.  Alternatively, the convoy leader may be the leader for each pair, where the follower is each of the other vehicles in the conoy.  For the development of a path following driver aid, however, the configuration was simplified to a single pair of vehicles.  It was assumed that a single stream raw range and carrier measurements would be received from the vehicle whose path should be replicated.
 
   %%%%% Literature & Previous Work %%%%%
   % scott and will
@@ -127,14 +122,24 @@
 
 \section*{Graphical User Interface}
 
-  %% Input parameters and thresholding
+  % Overarching design goals
+  From the outset, a primary design goal was to minimize the amount of visual and cognitive effort required on the part of the driver in determining whether course and speed corrections are necessary, and if so, what they are.  Facilities for accepting driver-input operational parameters must therefore be obscured during the driving task, yet easily accessible on the fly.
+  
+  %% Input from GPS / DRTK / TDCP
+  \begin{figure}[ht] \centering
+    \includegraphics[width=0.8\columnwidth]{../graphics/data_algo.png}
+    \caption{Data flow from GNSS receivers to the GUI backend}
+    \label{fig:data_flow}
+  \end{figure}
 
-  \textit{INPUTS}
+  %% User input parameters
+
+  % leader position is the last point in the relative path 
 
   %% Qt %%
   \subsection*{Qt}
   
-    From the outset, a primary design goal was to minimize the amount of visual and cognitive effort required on the part of the driver in determining whether course and speed corrections are necessary, and if so, what they are.  Facilities for accepting driver-input operational parameters must therefore be obscured during the driving task, yet easily accessible on the fly.  In addition, a clean and minimal visual presence ensures that a passing glance is sufficient to check on distance and deviations.  When following very closely, a follower will need to anticipate upcoming turns without being able to see the leader actually turn, so course information---specifically, the leader's course relative to that of the follower---will be needed.  These were the fundamentals driving the GUI development at the outset.  The resulting interface was presented in a single window on the display device and utilized only the Qt4 C++ library \cite{qt} and associated Python bindings for rendering.
+    In addition, a clean and minimal visual presence ensures that a passing glance is sufficient to check on distance and deviations.  When following very closely, a follower will need to anticipate upcoming turns without being able to see the leader actually turn, so course information---specifically, the leader's course relative to that of the follower---will be needed.  These were the fundamentals driving the GUI development at the outset.  The resulting interface was presented in a single window on the display device and utilized only the Qt4 C++ library \cite{qt} and associated Python bindings for rendering.
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth] {../graphics/final_design_data.png}
@@ -144,7 +149,11 @@
   %% Earth %%
   \subsection*{Google Earth}
 
+    % motivation for using earth
     Since a significant end use case involves military convoys, feedback was sought from personnel in the Armed Forces.  One primary criticism was the lack of visual stimuli by which to reconcile the screen output with what the user sees around them.  In essence, it was suggested, users must develop a trust with any tool before beginning to make decisions based upon it, particularly in the dire situations for which this tool is designed.  To remedy this, it was proposed that satellite imagery be incorporated into the background of the information already displayed on the screen.  As this directly contradicted the clean, distraction-free nature of the prototype already developed, it was determined that another version needed to be constructed following these new design principals, and that the two GUI's should be juxtaposed the most prudent approach. In determining what software package to use as an imagery backend, a trade study was performed and the resulting candidates were narrowed to Quantum GIS and Earth (by Google).  The maturity, user-base and documentation on representing data with the Keyhole Markup Language (KML) ultimately made Google Earth the favored tool.
+
+    % note about adding leader velocity
+    % placement by 
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth] {../graphics/earth_slow.png}
@@ -154,14 +163,23 @@
   %% Interpolator Section %%
   \subsection*{Live Interpolation}
 
-    The addition of satellite imagery made the user highly aware of the update rate of each piece of information displayed spatially, necessitating the incorporation of data smoothing techniques.  Since the end goal is to display information that has been received rather than predict future states, a minimum of two most recent data points is required to do a live interpolation.  With this, a continuous-time linear interpolation of the measurement at any instant between those two times is possible.  By making more data points available and considering the type or nature of data in question, more accurate form of interpolation may be possible. However, due to speed and efficiency, the linear interpolation is preferable in this situation.  All values which are displayed in the GUI (listed in Sec. \ref{sec:guiintro}) are passed through the interpolation algorithm.
+    % had to interpolate to smooth
+    The addition of satellite imagery made the user highly aware of the update rate of each piece of information displayed spatially, as the terrain view was refocused on each update.  This necessitated the incorporation of data smoothing techniques to prevent the user from becoming disoriented.
+    % linear interpolation - lag
+    Since the primary object is to display information that has been received rather than predict future states, a minimum of two of the most recent data points is required to do a live interpolation.  With this, a continuous-time linear interpolation of the measurement at any instant between those two times is possible.  By making more data points available and considering the type or nature of data in question, more accurate forms of interpolation may be possible. However, due to speed and efficiency concerns, the linear interpolation is preferable in this situation.
+    % interpolation vs synchromization
+    A simpler approach to 
+    All values which are displayed in the GUI are passed through the interpolation algorithm.
 
-    %%%% data-type specific
     For two dimensional positions, this procedure is carried out on both the East and North coordinates. 
-    %% angle
-    Angles are a different matter. The course dimension contains an inherent discontinuity due to `wrapping' at the North axis. A course change of $-1^\circ$ may result in a measurement change of $-359^\circ$, which if naively interpolated would result in a complete spin over a full timestep, ending at essentially the same location as the beginning. For this reason, the angles must be occasionally be resolved (i.e., when $|x_1 - x_0| > 180^\circ$ ) by adding $360^\circ$ to the lowest value. For example, values of $(x_0, x_1) = (0.5^\circ, 359.5^\circ)$ would then become $(x_0, x_1) = (360.5^\circ, 359.5^\circ)$ .  This value is then checked and corrected by the display controller upon rendering.
     %% path
     For the path to be interpolated,  the same procedure for positions is carried out for each point in the vector. A problem arises when interpolating between timesteps with unequal numbers of points, as each point cannot then be interpolated as if it were travelling along a line. When path length mismatch occurs between two successive updates, redundant points are added coincident with the rearmost path point until the two vectors are equal in length. When the number of points is decreasing, this alone would lead to a buildup of unnecessary data points, tying up valuable memory space and processing time. Thus, each time the length decreases and stays constant or continues decreasing for two or more timesteps, redundant points are removed from the saved vector.
+
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/middleware_diagram.png}
+      \caption{Delivery of data from the middleware interface to the GUI backend}
+      \label{fig:middlewared}
+    \end{figure}
 
     %% time update
     While GNSS provides the ability to precisely synchronize systems, display smoothing must rely upon computer-specific timestamps as some machines will operate more slowly than others. Accordingly, when initial measurement messages arrive, the CPU time at which the content of each message packet was extracted is stored along with that content. It is important that CPU time is recorded upon extraction rather than upon completion of processing or transmission, as the goal of this process is to obscure lags incurred during calculation or radio transmission; the extraction (and assignment) time represents the earliest point when any portion of the rest of the GUI may then access that data to display it. The end result is that the user is presented with data which will change at a consistent frequency (as specified by the user), regardless of whether multiple sensors take varying amounts of time to relay or calculate data.
@@ -179,12 +197,32 @@
 
   Experimental trials were conducted using three different testing scenarios: the lane-change test, the precision following test, and the zero landmark test.  
   %% Hardware
-  \textit{ HARDWARE}
+  The GNSS hardware used were both L1/L2 NovAtel Propak v3 (using OEMV chips). The DRTK and TDCP estimators utilized both L1 and L2 signals, from GPS satellites only.  Raw pseudorange and carrier information was broadcast directly from the lead receiver to the navigation computer in the following vehicle using two 900 MHz radios. To prevent the length of the vehicles from introducing constant biases into the estimate of longitudinal curvilinear spacing, the lead vehicle's antenna was placed on the most rearward horizontal surface and the following vehicle's antenna was placed on the most forward horizontal surface.
+  % display
+  A single laptop computer was used for the differential GPS calculations as well as the display control. This was placed in the following vehicle in direct view of the driver, as shown in Figure \ref{fig:driver_view}.
+
+  \begin{figure}[ht] \centering
+    \includegraphics[width=0.8\columnwidth]{../graphics/driver_view.jpg}
+    \caption{The display computer was placed in direct view of the following driver.}
+    \label{fig:driver_view}
+  \end{figure}
 
   %% Lane-Change Test
   \subsection*{Lane Change Test}
 
+    % explanation of test
     To produce pass-fail results, a maneuver common in typical roadway driving, the lane change, was used in a situation in which the maneuver could be replicated properly or improperly to produce a binary result.  This test takes place on the National Center for Asphalt Technology (NCAT) test track in Opelika, AL, which is a two lane, 1.7 mile oval with turns comparable to those found on an interstate highway.  The leader drives through a $180^{\circ}$ turn and upon exiting makes a lane change between any of six cones spaced $10~m$ apart along the center stripe at the start of the straightaway.  This event is visually obscured from the following driver, who has no foreknowledge of which cone pair will be chosen, so there is a 20\% chance of choosing the correct pair simply by guessing.
+
+    \begin{table}[htbp] \centering \caption{Cone pairs chosen in the lane change replication test}
+    \begin{tabular}{rc|cc} 
+        GUI&    Run \#  &     Leader&    Follower \\ \hline\hline
+        Earth&      1       &       1   &    3 \\
+             &      2       &       3   &    4   \\ \hline
+        Qt&         3       &       2   &    3   \\
+             &      4       &       5   &    5 \\ \hline   
+    \end{tabular} \label{tab:lanechangeresults} \end{table}
+
+
 
   %% Precision Following Test %%
   \subsection*{Precision Following Test}
@@ -231,7 +269,7 @@
     \begin{tabular}{r|c} 
         GUI&    Mean abs. dev. \\ \hline\hline
         Earth&      2.7404 m \\
-        Qt&   3.6830 m \\
+        Qt&         3.6830 m \\
         Control&    0.7267 m \\ \hline   
     \end{tabular} \label{tab:zero_dev_mean} \end{table}
 
@@ -247,6 +285,8 @@
 
   %% improvements - overlay prediction
   The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the follower’s path in realtime given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately 1 s required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window, but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
+
+  %% add SA for the whole caravan - Yuma
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
