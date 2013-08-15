@@ -135,7 +135,7 @@
   %% Input from GPS / DRTK / TDCP
   \begin{figure}[ht] \centering
     \includegraphics[width=0.8\columnwidth]{../graphics/data_algo.png}
-    \caption{Data flow from GNSS receivers to the GUI backend}
+    \caption{Data flow from GNSS receivers of leader-follower pairs to the following GUI backend}
     \label{fig:data_flow}
   \end{figure}
 
@@ -254,8 +254,7 @@
     \label{fig:driver_view}
   \end{figure}
 
-  For all tests, the same set of alert thresholds were used to ensure consistency. A lateral deviation warning alert was issued at 1.0 m, and a lateral deviation critical alert was issued at 2.0 m. A longitudinal spacing warning alert was issued at $\mu = 0.5$ and a longitudinal spacing critical alert was issued at $\mu=1.0$.
-  \textbf{TODO Default threshold determination}
+  For all tests, the same set of alert thresholds were used to ensure consistency. A lateral deviation warning alert was issued at 1.0 m, and a lateral deviation critical alert was issued at 2.0 m. A longitudinal spacing warning alert was issued at $\mu = 0.5$ (a typical value for low-friction surfaces such as dirt or gravel) and a longitudinal spacing critical alert was issued at $\mu=1.0$ (a typical value for asphalt) \cite{mu}.
 
   % Results analysis:
   For both the precision following and zero landmark tests, the combined percentage of timesteps in which either a deviation or distance alert was present was calculated to find the `best' run of that test, one for each of the GUIs, and one without any aid (the control). These data runs are then analyzed in depth below.
@@ -278,6 +277,8 @@
       \label{tab:lanechangeresults}
     \end{table}
 
+    \textbf{discussion of results}
+    In all cases where an incorrect cone pair was chosen, the follower changed lanes later than did the leader.  This indicates that the latency accumulated from the radios as well as the middleware database.
 
 
   %% Precision Following Test %%
@@ -298,7 +299,13 @@
     % discussion of the merits of the test
     This test primarily focused on distinguishing which GUI best provided aid in path duplication; for a comparative analysis, the test was conducted with the aid of each GUI individually, then without any assistance information at all.  As this test was conducted in an environment equivalent to most American two-lane roads and the leader does not stray from the two outer lane markings, it was anticipated that the lateral deviation should be bounded by approximately the width of the road minus the track width of the widest vehicle, or $5.8~m$.  This allows for scrutiny of the deviation in greater detail than when the lateral deviation is not bounded by design.
 
-    %% discussion of Results
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/pdf_precision_following_deviation.png}
+      \caption{Probability density estimate function for lateral deviation during the best run of the precision following test}
+      \label{fig:pdf_pf_dev}
+    \end{figure}
+
+    \textbf{discussion of Results}
 
 
 
@@ -317,7 +324,13 @@
     % test description
     Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended present a path with is difficult to follow while the following vehicle attempted to adhere to the path as well as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
 
-    % discussion of results
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/pdf_zero_landmark_deviation.png}
+      \caption{Probability density estimate function for lateral deviation during the best run of the zero landmark test}
+      \label{fig:pdf_zl_dev}
+    \end{figure}
+
+    \textbf{discussion of results}
 
   %% Deviation for PF and ZL tests %%
   \begin{table}[htbp] \centering
