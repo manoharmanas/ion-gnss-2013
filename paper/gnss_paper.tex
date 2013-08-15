@@ -258,6 +258,7 @@
 
   % Results analysis:
   For both the precision following and zero landmark tests, the combined percentage of timesteps in which either a deviation or distance alert was present was calculated to find the `best' run of that test, one for each of the GUIs, and one without any aid (the control). These data runs are then analyzed in depth below.
+  \textbf{ksdensity explanation}
 
   %% Lane-Change Test
   \subsection*{Lane Change Test}
@@ -301,12 +302,18 @@
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/pdf_precision_following_deviation.png}
-      \caption{Probability density estimate function for lateral deviation during the best run of the precision following test}
+      \caption{Probability density estimate function for lateral deviation over the best run of the precision following test}
       \label{fig:pdf_pf_dev}
     \end{figure}
 
     \textbf{discussion of Results}
 
+    % PDF of mu req
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/precision_following_mu_distribution.png}
+      \caption{Probability density estimate function for friction coefficient required to stop without collision over the best run of the precision following test}
+      \label{fig:pdf_pf_mu}
+    \end{figure}
 
 
   %% Zero-Landmark Test %%
@@ -324,10 +331,18 @@
     % test description
     Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended present a path with is difficult to follow while the following vehicle attempted to adhere to the path as well as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
 
+    % PDF of dev
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/pdf_zero_landmark_deviation.png}
-      \caption{Probability density estimate function for lateral deviation during the best run of the zero landmark test}
+      \caption{Probability density estimate function for lateral deviation over the best run of the zero landmark test}
       \label{fig:pdf_zl_dev}
+    \end{figure}
+
+    % PDF of mu req
+    \begin{figure}[ht] \centering
+      \includegraphics[width=\columnwidth]{../graphics/zero_landmark_mu_distribution.png}
+      \caption{Probability density estimate function for friction coefficient required to stop without collision over the best run of the zero landmark test}
+      \label{fig:pdf_zl_mu}
     \end{figure}
 
     \textbf{discussion of results}
