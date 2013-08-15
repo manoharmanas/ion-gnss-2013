@@ -28,7 +28,7 @@
 \titleformat{\section}  {\bfseries\MakeUppercase}{\thesection}{1em}{}
 \titlespacing{\section}  {0pt}{\baselineskip}{0pt}
 %% subsection title formatting
-\titleformat{\subsection}  {\bfseries\normalsize}{\thesubsection}{1em}{}
+\titleformat{\subsection}  {\it\normalsize}{\thesubsection}{1em}{}
 \titlespacing{\subsection}  {0pt}{0pt}{-5pt}
 
 \pagenumbering{gobble} % turn off page numbering
@@ -128,9 +128,8 @@
 
   This work follows and builds upon that done by Martin \cite{ScottThesis} and Travis \cite{travisdiss}.
   % DRTK
-  DRTK is a feature now common on many GPS receivers, with
+  DRTK is a feature now common on many GPS receivers, with \textbf{Finish}
   
-
   The driver aid presented herein extends the DRTK/TDCP following algorithm by combining relative path data with standard GPS estimates for velocity and course as shown in Fig. \ref{fig:data_flow} below.
 
   %% Input from GPS / DRTK / TDCP
@@ -164,11 +163,12 @@
   % \end{figure}
 
   %% User input parameters relating to alerts
-  To determine whether these values are acceptable, the user
+  To determine whether these values are acceptable, thresholding was implemented to differentiate between three possible states, deemed `acceptable', `warning', and `critical'.
+  For lateral deviation, these values are as simple as 
   % 
   Facilities for accepting these driver-input operational parameters must therefore be obscured during the driving task, yet easily accessible on the fly. 
 
-  % leader position is the last point in the relative path 
+  \textbf{Course Spinning}
 
   %% Qt %%
   \subsection*{Qt}
@@ -184,9 +184,9 @@
 
     %% Display explanation
     % follower-forward is up on the screen
-    
+    All information is displayed such the `up' on the display device corresponds to the positive longitudinal axis of the following vehicle.
     % orientation of path and leader is determined using the follower course
-    Since the relative path is computed in ECEF coordinates and converted into relative ENU components
+    Since the relative path is computed in ECEF coordinates and converted into relative ENU components, displaying points of interest relative to the follower's orientation is done by rotating them using the course measurement of the following vehicle's receiver. For low-dynamic scenarios, approximating heading as being equivalent to course provided adequate results.
     % orientation of leader course
     The orientation of the lead vehicle (represented with a simple square icon containing an arrow for its positive longitudinal axis) is then always shown relative to the follwing vehicle.  So if the leader is shown pointing to the right, the direction of its motion is then to the follower’s lateral axis and in the positive direction. 
 
@@ -205,6 +205,7 @@
 
     % note about adding leader velocity
     % placement by follower std position
+    Switching to Google Earth necessitated provided at least one global position by which to overlay all the data relative to the follower.  The standard positioning solution for the follower is used for this, meaning that all positions as they are displayed have centimeter-level relative accuracy, but accuracy relative to the underlying satellite imagery is contingent upon both the receiver used and the accuracy of the satellite images.  As the accuracy of Google Earth imagery varies with location, and can be off by as much as 50 m \cite{ge_accuracy}, improving the global accuracy was determined to be of low importance.  As 
     % path and leader orientation implicit since path is in E,N coordinates
 
   %% Interpolator Section %%
@@ -252,6 +253,9 @@
     \caption{The display computer was placed in direct view of the following driver.}
     \label{fig:driver_view}
   \end{figure}
+
+  For all tests, the same set of alert thresholds were used to ensure consistency. A lateral deviation warning alert was issued at 1.0 m, and a lateral deviation critical alert was issued at 2.0 m. A longitudinal spacing warning alert was issued at $\mu = 0.5$ and a longitudinal spacing critical alert was issued at $\mu=1.0$.
+  \textbf{TODO Default threshold determination}
 
   % Results analysis:
   For both the precision following and zero landmark tests, the combined percentage of timesteps in which either a deviation or distance alert was present was calculated to find the `best' run of that test, one for each of the GUIs, and one without any aid (the control). These data runs are then analyzed in depth below.
@@ -313,18 +317,20 @@
     % test description
     Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended present a path with is difficult to follow while the following vehicle attempted to adhere to the path as well as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
 
+    % discussion of results
 
-    \begin{table}[htbp] \centering
-      \caption{Mean absolute deviation for the precision following \& zero landmark tests}
-      \begin{tabular}{r|c|c|} 
-        GUI&         Precision Following & Zero Landmark \\
-        \hline
-        Earth&      0.9677 m & 2.7404 m \\
-        Qt&         0.4719 m & 3.6830 m \\
-        Control&    0.2069 m & 0.7267 m \\ \hline 
-      \end{tabular}
-      \label{tab:zero_dev_mean}
-    \end{table}
+  %% Deviation for PF and ZL tests %%
+  \begin{table}[htbp] \centering
+    \caption{Mean absolute deviation for the precision following \& zero landmark tests}
+    \begin{tabular}{r|c|c|} 
+      GUI&         Precision Following & Zero Landmark \\
+      \hline
+      Earth&      0.9677 m & 2.7404 m \\
+      Qt&         0.4719 m & 3.6830 m \\
+      Control&    0.2069 m & 0.7267 m \\ \hline 
+    \end{tabular}
+    \label{tab:zero_dev_mean}
+  \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
