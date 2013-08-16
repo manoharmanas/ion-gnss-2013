@@ -84,7 +84,7 @@
   % relative path vectorization
   The relative path vector method proposed by \cite{travisdiss} is used to compute the positions of a virtual leader, i.e., a series of points representing where the leader was at previous time steps.
   % GUIs
-  This path is then displayed to following drivers using two graphical user interfaces (GUIs): a minimalistic design relaying only necessary information, and a design incorporating satellite imagery to give the driver information to localize the displayed path.
+  This path is then displayed to following drivers using two graphical user interfaces (GUIs): a minimalistic design relaying only necessary information and a design incorporating satellite imagery to give the driver information to localize the displayed path.
   % testing
   The effectiveness of these tools is then evaluated by recording and analyzing the path following performance in various scenarios.
 
@@ -105,10 +105,10 @@
 \section*{Introduction}
 
   %%%%% Intro Blurb - why important %%%%%
-  The use of vehicle convoys is commonly used in ground transportation, and both safety and path precision are often of chief importance to this task.  Extremely close spacing can be used to reduce fuel costs, but introduces a collision risk.  In other cases, when traveling over a path that has unstable or dangerous areas nearby, a following vehicle attempts to stay within the track of a vehicle ahead.  When visibility is impaired, the ability of any convoy driver to adhere to a path of known safety and to avoid colliding with the leader is significantly reduced.  Real-time path information is sought which will enable a following driver to intuitively and safely maintain a high-fidelity execution of the desired path during situations in which the leader is either not directly visible or close enough that the risk of collision is imminent.
+  The use of vehicle convoys is commonly used in ground transportation, and both safety and path precision are often of chief importance to this task.  Extremely close spacing can be used to reduce fuel costs but introduces a collision risk.  In other cases, when traveling over a path that has unstable or dangerous areas nearby, a following vehicle attempts to stay within the track of a vehicle ahead.  When visibility is impaired, the ability of any convoy driver to adhere to a path of known safety and to avoid colliding with the leader is significantly reduced.  Real-time path information is sought which will enable a following driver to intuitively and safely maintain a high-fidelity execution of the desired path during situations in which the leader is either not directly visible or close enough that the risk of collision is imminent.
 
   % Problem specific - why two vehicles were used
-  For the convoy scenario, a caravan of $N$ vehicles attempting to travel along the same path may be broken down into $N-1$ leader-follower pairs.  These pairs may comprise each of the longitudinally adjacent vehicles.  Alternatively, the convoy leader may be the leader for each pair, where the follower is each of the other vehicles in the conoy.  For the development of a path following driver aid, however, the configuration was simplified to a single pair of vehicles.  It was assumed that a single stream raw range and carrier measurements would be received from the vehicle whose path should be replicated.
+  For the convoy scenario, a caravan of $N$ vehicles attempting to travel along the same path may be broken down into $N-1$ leader-follower pairs.  These pairs may comprise each of the longitudinally adjacent vehicles.  Alternatively, the convoy leader may be the leader for each pair, where the follower is each of the other vehicles in the convoy.  For the development of a path following driver aid, however, the configuration was simplified to a single pair of vehicles.  It was assumed that a single stream raw range and carrier measurements would be received from the vehicle whose path should be replicated.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,17 +119,16 @@
 
   % scott and will
   % General situational awareness
-  Situational awareness systems (SASs) ... 
+  Situational awareness systems (SASs) provide users with real time information about the position and behavior of one or more points of interest nearby.
   % sandia situational awareness
-  Researchers at Sandia Laboratories \cite{riblett2007} developed a vehicular situational awareness system based upon ad-hoc communications, which utilizes a touch-screen display of other vehicles. This system was then extended to operate in dismounted situations via a handheld display device.
+  Researchers at Sandia Laboratories \cite{riblett2007} developed a vehicular situational awareness system based upon ad-hoc communications, which utilizes a touch-screen display of other vehicles' positions on known roadways. This system was then extended to operate in dismounted situations via a hand-held display device.
   %%!! Blue force tracker
+  The US military has multiple Blue Force tracking \cite{luddy2005challenge} systems which provide various levels of situational awareness for tracking vehicles and dismounted warfighters in groups.
   %%! Robotic path following
+  In robotics, path following based upon waypoint tracking and direct following is widespread.
   % Path information display is not common
   The literature has very few examples of SASs which track and relay relative path information. This work seeks to explore that area further and provide a novel solution to the human-controlled path following problem.\
-
   This work follows and builds upon that done by Martin \cite{ScottThesis} and Travis \cite{travisdiss}.
-  % DRTK
-  DRTK is a feature now common on many GPS receivers, with \textbf{Finish}
   
   The driver aid presented herein extends the DRTK/TDCP following algorithm by combining relative path data with standard GPS estimates for velocity and course as shown in Fig. \ref{fig:data_flow} below.
 
@@ -150,7 +149,7 @@
   % Overarching design goals
   From the outset, a primary design goal was to minimize the amount of visual and cognitive effort required on the part of the driver in determining whether course and speed corrections are necessary, and if so, what they are.
   %% Alerts
-  Apart from relaying the relative path and leader's velocity and course, two other pieces of information need to be relayed: separation between the two vehicles, and by how much the following vehicle strays from the desired path.
+  Apart from relaying the relative path and leader's velocity and course, two other pieces of information need to be relayed: separation between the two vehicles and by how much the following vehicle strays from the desired path.
   % define lateral deviation
   Lateral deviation is measured by the magnitude of a line passing through the position of the follower and perpendicularly intersecting the nearest path segment.
   % define path distance
@@ -158,12 +157,12 @@
 
   %% User input parameters relating to alerts
   To determine whether these values are acceptable at any time epoch, thresholding was implemented to differentiate between three possible states, deemed `acceptable', `warning', and `critical'.
-  For lateral deviation, these values are as simple as inputing two thresholds from the user.  For estimating the safety of longitudinal vehicle separation, however, a different approach was taken.  The user supplies two coefficients of road surface friction to the GUI: a critical value $\mu_{crit}$ represents the approximate surface friction for the current terrain, and warning value $\mu_{warn}$ represents the surface friction for a much less tractive surface.  At every time epoch the current horizontal velocity magnitude is used to compute a corresponding separation threshold from this $\mu$ value using Equation \ref{eq:stopdist}.  The present longitudinal curvilinear separation is then compared to this value to determine the safety status.
+  For lateral deviation, these values are as simple as inputting two thresholds from the user.  For estimating the safety of longitudinal vehicle separation, however, a different approach was taken.  The user supplies two coefficients of road surface friction to the GUI: a critical value $\mu_{crit}$ represents the approximate surface friction for the current terrain, and warning value $\mu_{warn}$ represents the surface friction for a much less tractive surface.  At every time epoch the current horizontal velocity magnitude $|\bar{v}|$ is used to compute a corresponding separation threshold (i.e., the minimum stopping distance $d_{stop}^{min}$) from this $\mu$ value using Equation \ref{eq:stopdist}.  The acceleration due to gravity is represented by $g$.  The present longitudinal curvilinear separation is then compared to this value to determine the safety status.
   % stopping distance equation (mu)
   \begin{align} \label{eq:stopdist}
     d_{stop}^{min} &= \left( \frac {1} {\mu g} \right) \left(\frac {|\bar{v}|^2} {2} \right)
   \end{align}  % 
-  Facilities for accepting the driver-input operational parameters listed above must be obscured during the driving task, yet easily accessible on the fly.  A minimal parameter input pane was constructed, and can be seen in Figure \ref{fig:qt_normal}.
+  Facilities for accepting the driver-input operational parameters listed above must be obscured during the driving task, yet easily accessible on the fly.  A minimal parameter input pane was constructed and can be seen in Figure \ref{fig:qt_normal}.
 
 
   %% Qt %%
@@ -201,7 +200,7 @@
 
     % note about adding leader velocity
     % placement by follower std position
-    Switching to Google Earth necessitated providing at least one global position by which to overlay all the data relative to the follower.  The standard positioning solution for the follower is used for this, meaning that all positions as they are displayed have centimeter-level relative accuracy, but accuracy relative to the underlying satellite imagery is contingent upon both the receiver used and the accuracy of the satellite images.  As the accuracy of Google Earth imagery varies with location, and can be off by as much as $50~m$ \cite{ge_accuracy}, improving the global accuracy was not pursued.
+    Switching to Google Earth necessitated providing at least one global position by which to overlay all the data relative to the follower.  The standard positioning solution for the follower is used for this, meaning that all positions as they are displayed have centimeter-level relative accuracy, but accuracy relative to the underlying satellite imagery is contingent upon both the receiver used and the accuracy of the satellite images.  As the accuracy of Google Earth imagery varies with location and can be off by as much as $50~m$ \cite{ge_accuracy}, improving the global accuracy was not pursued.
     % path and leader orientation implicit since path is in E,N coordinates
 
 
@@ -285,7 +284,7 @@
     The lane change replication test is one example of implementing the path duplication tool, but does not produce the detailed results necessary for a formal conclusion favoring the usefulness of one GUI over the other.  Centimeter-level measurements are available, so it is of great interest to determine whether either tool enables a convoy driver to carry out the following task with this improved level of precision.
     
     % description
-    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Once reaching 45 mph, the magnitude of the leaders ground plane velocity vector will vary according to position on the track.  Along the two $180^{\circ}$ turns it will be approximately 45 mph, and along the straightaways it will be approximately 65 mph.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts, and accumulate as little deviation over time as possible.
+    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Once reaching 45 mph, the magnitude of the leaders ground plane velocity vector will vary according to position on the track.  Along the two $180^{\circ}$ turns it will be approximately 45 mph, and along the straightaways it will be approximately 65 mph.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts and accumulate as little deviation over time as possible.
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/precision_following_alert_percents.png}
@@ -319,7 +318,7 @@
   \subsection*{Zero-Landmark Test}
 
     % motivation
-    The precision following test took place in an environment abundant in visual landmarks by which to localize, such as lane markings and road signs.  Given the motivation for these tools, it is necessary to examine the performance of both GUIs in a situation where this type of assistance is denied.  The zero landmark test was therefore constructed to determine the impact of removing visual awareness of surrounds as well as waypoints along the leaders path to assist in replicating it.
+    The precision following test took place in an environment abundant in visual landmarks by which to localize, such as lane markings and road signs.  Given the motivation for these tools, it is necessary to examine the performance of both GUIs in a situation where this type of assistance is denied.  The zero landmark test was therefore constructed to determine the impact of removing visual awareness of surroundings as well as waypoints along the leader'ss path to assist in replicating it.
     
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/zero_landmark_alert_percents.png}
@@ -328,7 +327,7 @@
     \end{figure}
 
     % test description
-    Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended present a path with is difficult to follow while the following vehicle attempted to adhere to the path as well as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
+    Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended to `'present a path which is difficult to follow while the following vehicle attempted to adhere to the path as close as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
 
     % PDF of dev
     \begin{figure}[ht] \centering
@@ -374,12 +373,13 @@
 \section*{Conclusions \& Future Work}
 
   %% summary
-  Two graphical tools were developed to assist drivers in convoys with high fidelity to the lead vehicles path while maintaining a safe spacing between them.  Experimentation reveals that they were quite effective in helping to enforce safe curvilinear following distances, while more development is needed to optimize results for lateral path deviation.  
+  Two graphical tools were developed to assist drivers in convoys with high fidelity to the lead vehicle's path while maintaining a safe spacing between them.  Experimentation reveals that they were quite effective in helping to enforce safe curvilinear following distances, while more development is needed to optimize results for lateral path deviation.  
 
   %% improvements - overlay prediction
-  The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the followers path in real time given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately 1 s required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window, but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
+  The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the follower's path in real time given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately $1.0~s$ required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window`' but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
 
   %% add SA for the whole caravan - Yuma
+  At present, a middleware with much lower latency is being integrated into the system, and testing shows improvement.  The single pair scenario is being expanded upon, and a communications strategy for three or more vehicles is being developed.  In addition, fusion of GNSS with magnetometry for more accurate heading determination and RADAR for more accurate separation estimation is being estimated.
   %% magnetometry for course/heading
 
 
