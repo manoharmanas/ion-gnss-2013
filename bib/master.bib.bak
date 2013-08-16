@@ -68,6 +68,16 @@
   timestamp = {2013.04.03}
 }
 
+@INPROCEEDINGS{Hodo2013,
+  author = {Hodo, David and Collins, Chris and Bevly, David},
+  title = {Network Assisted GPS Navigation for Dismounted Soldiers},
+  booktitle = {Proceedings of the 26th International Technical Meeting of the Satellite
+	Division of The Institute of Navigation (ION GPS/GNSS 2013)},
+  year = {2013},
+  owner = {rgcofield},
+  timestamp = {2013.07.13}
+}
+
 @ARTICLE{truckstats,
   author = {Huang, Yueng-Hsiang and Zohar, Dov and Robertson, Michelle and Lee,
 	Jin and Garabet, Angela and Murphy, Lauren},
@@ -235,6 +245,16 @@
   pages = {126-141},
   owner = {rgcofield},
   timestamp = {2013.01.31}
+}
+
+@BOOK{wand1995kernel,
+  title = {Kernel smoothing},
+  publisher = {Crc Press},
+  year = {1995},
+  author = {Wand, M Matt P and Jones, MM Chris},
+  volume = {60},
+  owner = {rgcofield},
+  timestamp = {2013.08.16}
 }
 
 @TECHREPORT{mu,
