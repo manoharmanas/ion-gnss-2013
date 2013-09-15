@@ -7,8 +7,10 @@
 \usepackage[scaled]{helvet}
 
 \usepackage{url}
-\usepackage{tikz}
-\usepackage{pgf}
+
+\usepackage{tikz,pgf}
+\usetikzlibrary{arrows}
+
 \usepackage{epstopdf}
 \usepackage{siunitx}
 \usepackage{amsmath}
@@ -19,13 +21,19 @@
 % \usepackage[utf8]{inputenc}
 \usepackage{hypcap}
 
+% used for image citations
+\usepackage[absolute,overlay]{textpos}
+
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 \title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
 \author[]{Robert Cofield, Scott Martin, David Bevly}
 \date{September , 2013} 
 
-\newcommand{\citeitem}[1]{\emph{\citeyear{#1}}--\Citeauthor*{#1}, \citetitle{#1} }
+\newcommand{\citeitem}[1]{
+  \emph{\citeyear{#1}}--\Citeauthor*{#1}, \citetitle{#1}
+}
+
 
 \AtBeginSection[] {
   \begin{frame}<beamer>
@@ -43,6 +51,21 @@
 %% Title Slide %%
 \frame{\titlepage}
 
+%%%%%%%%%%%%%%%%
+%% Motivation %%
+%%%%%%%%%%%%%%%%
+
+\section{Motivation}
+
+  %% Military 
+  \begin{frame}{Military Convoying}
+    \begin{figure}
+      \includegraphics[width=5cm]{../graphics/convoy_sandstorm_orange.jpg}
+      \caption{\cite{convoy_dust_orange}}
+    \end{figure}
+  \end{frame} 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Literature & Previous Work %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,10 +74,17 @@
   \subsection{DRTK}
 
     %% brief explanation
-    \begin{frame}{Dynamic base Real-Time Kinematic GNSS}
+    \begin{frame}{Dynamic Base Real-Time Kinematic GNSS}
+    \end{frame}
+
+    %% LAMBDA
+    \begin{frame}{LAMBDA Integer-Fixing Method}
+
     \end{frame}
 
     %% discuss accuracy
+    \begin{frame}{Errors in DRTK}
+    \end{frame}
 
   \subsection{TDCP}
 
@@ -63,11 +93,16 @@
     \end{frame}
 
     %% discuss accuracy
+    \begin{frame}{Errors in TDCP}
+    \end{frame}
 
   \subsection{Virtual Path}
 
     %% discuss virtual leader & path summation
     \begin{frame}{Construction of Path}
+      \begin{figure}
+        \includegraphics[width=10cm]{../graphics/path_algorithm.png}
+      \end{figure}
     \end{frame}
 
 
@@ -102,14 +137,14 @@
 
   \subsection{Middleware}
 
-    % talk about MOOS , etrc
+    % talk about MOOS , etc
     \begin{frame}{Middleware}
     \end{frame}
 
     %% introduce interpolation
     \begin{frame}{Interpolation}
       \begin{figure}[ht] \centering
-        \includegraphics[width=4in] {../graphics/middleware_diagram.png}
+        \includegraphics[width=5cm] {../graphics/middleware_diagram.png}
         \caption{Data input procedure} \label{fig:mw_diagram}
       \end{figure}
     \end{frame}
@@ -129,7 +164,7 @@
 
     \begin{frame}{Presentation to Driver}
       \begin{figure}[ht] \centering
-        \includegraphics[width=4in] {../graphics/driver_view.jpg}
+        \includegraphics[width=5cm] {../graphics/driver_view.jpg}
         \caption{View from the driver's seat} \label{fig:driver_view}
       \end{figure}
     \end{frame}
@@ -138,15 +173,32 @@
 
     % Outline of tests
     \begin{frame}{Testing Procedures}
+    
+      Lane Change Test
+
+      Precision Following Test
+      
+      Zero Landmark Test
+
     \end{frame}
 
     \begin{frame}{Lane Change Test}
+      \begin{figure}
+        \input{../graphics/lane_change_diagram}
+      \end{figure}
+      % text describing test
     \end{frame}
 
     \begin{frame}{Precision Following Test}
+      \begin{figure}
+        \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
+      \end{figure}   
     \end{frame}
 
     \begin{frame}{Zero Landmark Test}
+      \begin{figure}
+        \includegraphics[width=7cm]{../graphics/zero_landmark_path.png}
+      \end{figure}
     \end{frame}
 
   \subsection{Results}

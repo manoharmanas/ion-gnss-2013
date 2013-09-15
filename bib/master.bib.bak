@@ -105,6 +105,22 @@
   timestamp = {2013.07.23}
 }
 
+@ELECTRONIC{convoy_dust_orange,
+  author = {LCpl Andrew P. Roufs, USMC},
+  url = {http://commons.wikimedia.org/wiki/File:Iraqi_Sandstorm.jpg},
+  owner = {rgcofield},
+  timestamp = {2013.09.15}
+}
+
+@BOOK{luddy2005challenge,
+  title = {The challenge and promise of network-centric warfare},
+  publisher = {Lexington Institute},
+  year = {2005},
+  author = {Luddy, John},
+  owner = {rgcofield},
+  timestamp = {2013.08.16}
+}
+
 @CONFERENCE{gian,
   author = {Mariottini, Gian Luca and Pappas, George and Prattichizzo, Domenico
 	and Daniilidis, Kostas},
@@ -298,6 +314,12 @@
   type = {Master's Thesis},
   owner = {rgcofield},
   timestamp = {2013.04.24}
+}
+
+@ELECTRONIC{convoy01,
+  url = {http://darkroom.baltimoresun.com/wp-content/uploads/2013/03/TE.WITHDRAW15P3.jpg},
+  owner = {rgcofield},
+  timestamp = {2013.09.15}
 }
 
 @comment{jabref-meta: selector_publisher:}

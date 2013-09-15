@@ -96,7 +96,11 @@
 
 \section*{Biography}
 
-  Robert Cofield is investigating navigation of ground and other vehicles using GNSS and fused sensor solutions.  He works in the Auburn University GPS \& Vehicle Dynamics Laboratory.
+  Robert Cofield received his B.S. in Mechanical Engineering from Auburn University in 2013. He is investigating navigation of ground and other vehicles using GNSS and fused sensor solutions.  He works in the Auburn University GPS \& Vehicle Dynamics Laboratory.
+
+  Scott Martin received his B.S. in Engineering from East Carolina University in 2008. He received his M.S. in Mechanical Engineering in 2011 from Auburn University and is currently pursuing his Ph.D. at Auburn as a member of the GPS and Vehicle Dynamics Laboratory. He research interests include advanced GPS algorithms, autonomous vehicle navigation, and online Bayesian estimation. 
+
+  Dr. Bevly is a professor in the Department of Mechanical Engineering at Auburn University where he directs the GPS and Vehicle Dynamics Laboratory (GAVLab) which focuses on the control and navigation of vehicles using GPS.  He received his B.S. from Texas A&M University, an M.S. from Massachusetts Institute of Technology, and a Ph.D. from Stanford University in mechanical engineering. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Introduction %% Previous Work & Literature %%
@@ -212,7 +216,7 @@
     % linear interpolation - lag
     Since the primary objective is to display information that has been received rather than predict future states, a minimum of two of the most recent data points is required to do a live interpolation.  With this, a continuous-time linear interpolation of the measurement at any instant between those two times is possible.  By making more data points available and considering the type or nature of data in question, more accurate forms of interpolation may be possible. However, due to speed and efficiency concerns, the linear interpolation is preferable in this situation.
     % interpolation vs synchronization
-    A simpler approach to reducing the number of updates is to synchronize all data using GPS timestamps by holding asynchronous packets until all data packets have been received.  Optional functionality for this was added, but it was found that test drivers preferred to incur a small lag in order to be presented with smoothed data.
+    A simpler approach to reducing the number of updates is to synchronize all data using GPS timestamps by holding asynchronous packets until all data packets have been received.  Optional functionality for this was added, but it was found that test drivers preferred to incur a small lag (a single timestep, or $1~s$) in order to be presented with smoothed data.
     
     All values which are displayed in the GUI are passed through the interpolation algorithm when this smoothing mode is enabled.
     For two dimensional positions, this procedure is carried out on both the East and North coordinates. 
@@ -260,7 +264,7 @@
   \subsection*{Lane Change Test}
 
     % explanation of test
-    To produce pass-fail results, a maneuver common in typical roadway driving, the lane change, was used in a situation in which the maneuver could be replicated properly or improperly to produce a binary result.  This test takes place on the National Center for Asphalt Technology (NCAT) test track in Opelika, AL, which is a two lane, 1.7 mile oval with turns comparable to those found on an interstate highway.  The leader drives through a $180^{\circ}$ turn and upon exiting makes a lane change between any of six cones spaced $10~m$ apart along the center stripe at the start of the straightaway.  This event is visually obscured from the following driver, who has no foreknowledge of which cone pair will be chosen, so there is a 20\% chance of choosing the correct pair simply by guessing.
+    To produce pass-fail results, a maneuver common in typical roadway driving, the lane change, was used in a situation in which the maneuver could be replicated properly or improperly to produce a binary result.  This test takes place on the National Center for Asphalt Technology (NCAT) test track in Opelika, AL, which is a two lane, 1.7 mile oval with turns comparable to those found on an interstate highway.  The leader drives through a $180^{\circ}$ turn and upon exiting makes a lane change between any of six cones spaced $10~m$ apart along the center stripe at the start of the straightaway.  This event is visually obscured from the following driver, who has no foreknowledge of which cone pair will be chosen, so there is a 20\% chance of choosing the correct pair simply by guessing.  The following driver was not given a specified speed at which to perform the test.
 
     \begin{table}[htbp] \centering
       \caption{Cone pairs chosen in the lane change replication test}
@@ -274,7 +278,7 @@
       \label{tab:lanechangeresults}
     \end{table}
 
-    In all cases where an incorrect cone pair was chosen, the follower changed lanes later than did the leader.  This indicates that the latency accumulated from the radios as well as the middleware database.
+    In all cases where an incorrect cone pair was chosen, the follower changed lanes later than did the leader.  This indicates that the latency accumulated from the radios as well as the middleware database caused the driver to overshoot the lane change.
 
 
   %% Precision Following Test %%
@@ -284,7 +288,9 @@
     The lane change replication test is one example of implementing the path duplication tool, but does not produce the detailed results necessary for a formal conclusion favoring the usefulness of one GUI over the other.  Centimeter-level measurements are available, so it is of great interest to determine whether either tool enables a convoy driver to carry out the following task with this improved level of precision.
     
     % description
-    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Once reaching 45 mph, the magnitude of the leaders ground plane velocity vector will vary according to position on the track.  Along the two $180^{\circ}$ turns it will be approximately 45 mph, and along the straightaways it will be approximately 65 mph.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts and accumulate as little deviation over time as possible.
+    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Along the two $180^{\circ}$ turns the lead vehicle maintains a ground speed of approximately $45~mph$, and approximately $65~mph$ along the straightaways.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts and accumulate as little deviation over time as possible.
+
+    Figure \ref{fig:precision_following_alert_percents} shows the results from the best runs of the precision following test for both tools, as well as a control with no path assistance. The left pane shows for what percentage of all timesteps an alert was issued for path deviation, and the pane on the right shows the same information for following distance alerts.
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/precision_following_alert_percents.png}
@@ -293,7 +299,7 @@
     \end{figure}
 
     % discussion of the merits of the test
-    This test primarily focused on distinguishing which GUI best provided aid in path duplication; for a comparative analysis, the test was conducted with the aid of each GUI individually, then without any assistance information at all.  As this test was conducted in an environment equivalent to most American two-lane roads and the leader does not stray from the two outer lane markings, it was anticipated that the lateral deviation should be bounded by approximately the width of the road minus the track width of the widest vehicle, or $5.8~m$.  This allows for scrutiny of the deviation in greater detail than when the lateral deviation is not bounded by design.
+    This test primarily focused on distinguishing which GUI best provided aid in path duplication; for a comparative analysis, the test was conducted with the aid of each GUI individually, then without any assistance information at all.  As this test was conducted in an environment equivalent to most American two-lane roads and the leader does not stray from the two outer lane markings, it was anticipated that the lateral deviation should be bounded by approximately the width of the road minus the track width of the widest vehicle, or $5.8~m$.  This allows for scrutiny of the deviation in greater detail than when the lateral deviation is not bounded by design, as in the probability density function estimates shown in Figure \ref{fig:pdf_pf_dev}.
 
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/pdf_precision_following_deviation.png}

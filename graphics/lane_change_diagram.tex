@@ -1,0 +1,63 @@
+% \documentclass[10pt]{article}
+% \usepackage[utf8]{inputenc}
+% \usepackage{pgf,tikz}
+% \usetikzlibrary{arrows}
+% \pagestyle{empty}
+% \begin{document}
+
+\definecolor{ttzzqq}{rgb}{0.2,0.6,0}
+\definecolor{qqqqcc}{rgb}{0,0,0.8}
+\definecolor{ffcctt}{rgb}{1,0.8,0.2}
+\definecolor{ffzzqq}{rgb}{1,0.2,0}
+
+
+\begin{tikzpicture}[
+    scale=0.3,
+    line cap=round,
+    line join=round,
+    >=triangle 45,
+    x=1.0cm,y=1.0cm
+    ]
+
+    \begin{scope}[shift={(0,-15)}]
+
+    \clip(-0.94,-2.06) rectangle (29.18,16.12);
+    \draw [line width=5.2pt] (16,10)-- (2,10);
+    \draw [line width=5.2pt] (16,14)-- (2,14);
+    \draw [line width=5.2pt] (14,6)-- (16,6);
+    % center stripe
+    \draw [shift={(16,8)},line width=3pt,dash pattern=on 5pt off 5pt,color=ffcctt]  plot[domain=-1.57:1.57,variable=\t]({1*4*cos(\t r)+0*4*sin(\t r)},{0*4*cos(\t r)+1*4*sin(\t r)}); 
+    \draw [line width=3pt,dash pattern=on 5pt off 5pt,color=ffcctt] (14,4)-- (16,4);
+    \draw [line width=3pt,dash pattern=on 5pt off 5pt,color=ffcctt] (16,12)-- (4,12);
+
+    \draw [shift={(16,8)},line width=5.2pt]  plot[domain=-1.57:1.57,variable=\t]({1*6*cos(\t r)+0*6*sin(\t r)},{0*6*cos(\t r)+1*6*sin(\t r)});
+    \draw [shift={(16,8)},line width=5.2pt]  plot[domain=-1.57:1.57,variable=\t]({1*2*cos(\t r)+0*2*sin(\t r)},{0*2*cos(\t r)+1*2*sin(\t r)});
+    \draw [line width=5.2pt] (16,2)-- (14,2);
+    % path
+    \draw [shift={(13.19,10.74)},line width=2pt,dotted,color=qqqqcc]  plot[domain=1.61:2.63,variable=\t]({1*2.58*cos(\t r)+0*2.58*sin(\t r)},{0*2.58*cos(\t r)+1*2.58*sin(\t r)});
+    \draw [shift={(8.37,13.37)},line width=2pt,dotted,color=qqqqcc]  plot[domain=4.97:5.79,variable=\t]({1*2.91*cos(\t r)+0*2.91*sin(\t r)},{0*2.91*cos(\t r)+1*2.91*sin(\t r)});
+    \draw [line width=2pt,dotted,color=qqqqcc] (13.08,13.32)-- (16.04,13.24);
+    \draw [shift={(16,8.05)},line width=2pt,dotted,color=qqqqcc]  plot[domain=-1.58:1.56,variable=\t]({1*5.19*cos(\t r)+0*5.19*sin(\t r)},{0*5.19*cos(\t r)+1*5.19*sin(\t r)});
+
+    \begin{scriptsize}
+        % cones
+        \fill [color=ffzzqq] (4,12)     circle (5.0pt);
+        \fill [color=ffzzqq] (6,12)     circle (5.0pt);
+        \fill [color=ffzzqq] (8,12)     circle (5.0pt);
+        \fill [color=ffzzqq] (10,12)    circle (5.0pt);
+        \fill [color=ffzzqq] (12,12)    circle (5.0pt);
+        \fill [color=ffzzqq] (14,12)    circle (5.0pt);
+        % leader
+        \fill [color=ttzzqq,shift={(9.12,10.56)},rotate=90] (0,0) ++(0 pt,6.75pt) -- ++(5.85pt,-10.125pt)--++(-11.69pt,0 pt) -- ++(5.85pt,10.125pt);
+        \draw[color=ttzzqq] (8,11) node {$Leader$};
+        % follower
+        \fill [color=ttzzqq,shift={(15.96,2.86)},rotate=270] (0,0) ++(0 pt,6.75pt) -- ++(5.85pt,-10.125pt)--++(-11.69pt,0 pt) -- ++(5.85pt,10.125pt);
+        \draw[color=ttzzqq] (14.5,3.32) node {$Follower$};
+    \end{scriptsize}
+
+    \end{scope}
+
+\end{tikzpicture}
+
+
+% \end{document}
