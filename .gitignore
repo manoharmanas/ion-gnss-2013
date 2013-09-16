@@ -14,3 +14,5 @@
 *.out
 *.snm
 *.toc
+
+!AUlogo3-crop.pdf
