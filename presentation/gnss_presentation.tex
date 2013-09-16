@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usetheme[hideothersubsections]{AUTheme}
-\setbeamertemplate{caption}[numbered]
+% \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{bibliography item}[text]%,
 \setbeamertemplate{footline}[frame number]
 
@@ -18,23 +18,17 @@
 \usepackage[maxcitenames = 1, mincitenames=1,backend=bibtex]{biblatex}
 \usepackage{multicol}
 \usepackage{wrapfig}
-% \usepackage{minipage}
-% \usepackage{../sty/media9/media9}
+% \usepackage{cutwin} % this is awful.
 % \usepackage[utf8]{inputenc}
 \usepackage{hypcap}
-\usepackage{graphicx}
-% used for image citations
+\usepackage{lipsum}
 \usepackage[absolute,overlay]{textpos}
+% \usepackage[sf,sl,outermarks]{titlesec}
+\usepackage{caption}
+
+\captionsetup[figure]{labelformat=empty}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
-
-\title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
-\author[]{Robert Cofield, Scott Martin, David Bevly}
-\date{September , 2013} 
-
-\newcommand{\citeitem}[1]{
-  \emph{\citeyear{#1}}--\Citeauthor*{#1}, \citetitle{#1}
-}
 
 
 \AtBeginSection[] {
@@ -44,7 +38,11 @@
   \end{frame}
 }
 
-\bibliography{../bib/master.bib}
+\bibliography{../bib/master.bib} % problems here
+
+\title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
+\author[]{Robert Cofield, Scott Martin, David Bevly}
+\date{September , 2013} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -63,21 +61,9 @@
   \begin{frame}{Military Convoying}
     \begin{figure}
       \includegraphics[width=5cm]{../graphics/convoy_sandstorm_orange.jpg}
-      \caption{\cite{convoy_dust_orange}}
+      \vspace{-10pt}
+      \caption{\tiny Source: \citeauthor{convoy_dust_orange}}
     \end{figure}
-  \end{frame} 
-
-  %% ConOps
-  \begin{frame}{Concept of Operation}
-
-    \begin{figure}
-      \includegraphics[width=0.8\textwidth]{../graphics/blackbox_flowchart.png}
-    \end{figure}
-    \begin{itemize}
-      \item
-      \item
-      \item
-    \end{itemize}
   \end{frame}
 
 
@@ -119,6 +105,7 @@
       \end{figure}
     \end{frame}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Presentation of final products %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,22 +121,49 @@
       \includegraphics[width=\textwidth]{../graphics/data_algo.png}
     \end{minipage}
     \begin{minipage}{0.45\textwidth}
-      \begin{itemize}
+      \begin{itemize} \small
+        \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
         \item Unmanned Following
         \item Waypoint-based control
+        \item No intuitive method for quickly tuning algorithms \& visualizing errors
       \end{itemize}
     \end{minipage}
   \end{frame}
 
-
-  \begin{frame}{Initial Design Goals}
-    \begin{itemize}
-      \item
-    \end{itemize}
+  %% ConOps
+  \begin{frame}{Concept of Operation}
+    \begin{figure}
+      \includegraphics[width=0.8\textwidth]{../graphics/blackbox_flowchart.png}
+    \end{figure}
+    \begin{columns}  
+      \begin{column}{0.5\textwidth}
+        \footnotesize User inputs
+        \begin{itemize} \footnotesize
+          \item Critical alert values\\ ($\mu_{crit}~,~d_{crit}$)
+          \item Warning alert values\\ ($\mu_{warn}$~,~$d_{warn}$)
+        \end{itemize}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \footnotesize Relay to user
+        \begin{itemize} \footnotesize
+          \item 
+        \end{itemize}
+      \end{column}
+    \end{columns}
   \end{frame}
 
 
+
+  %%% Qt GUI %%%%
   \subsection{Qt}
+
+    % what led to simple GUI
+    % mention SBIR?
+    \begin{frame}{Initial Design Goals}
+      \begin{itemize}
+        \item
+      \end{itemize}
+    \end{frame}
 
     \begin{frame}{Qt-Based GUI --- Data Display}
       \begin{figure}[ht] \centering
@@ -165,6 +179,8 @@
       \end{figure}
     \end{frame}
 
+
+  %%% Google Earth GUI %%%
   \subsection{Earth}
 
     \begin{frame}{Google Earth GUI --- Data Display}
@@ -176,6 +192,7 @@
       \end{figure}
     \end{frame}
 
+
   \subsection{Middleware}
 
     % talk about MOOS , etc
@@ -186,7 +203,6 @@
     \begin{frame}{Interpolation}
       \begin{figure}[ht] \centering
         \includegraphics[width=5cm] {../graphics/middleware_diagram.png}
-        \caption{Data input procedure} \label{fig:mw_diagram}
       \end{figure}
     \end{frame}
 
@@ -194,6 +210,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Tests that were run & Results %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Experimentation}
 
   \subsection{Hardware \& Setup}
@@ -218,55 +235,40 @@
 
     \end{frame}
 
-
-    \begin{frame}{Presentation to Driver}
-
+    \begin{frame}{Experimentation}
       \begin{figure}[ht] \centering
         \includegraphics[width=5cm] {../graphics/driver_view.jpg}
         \caption{View from the driver's seat} \label{fig:driver_view}
       \end{figure}
 
+      \begin{itemize}
+        \item 3 vehicle platforms used: Infiniti G35 (sedan), Hyndai Sonata (SUV), Chevrolet Corvette (coupe)
+        \item 11 individual test drivers
+        \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$
+      \end{itemize}
     \end{frame}
 
 
-  \subsection{Testing Procedures}
-
-    % Outline of tests
-    \begin{frame}{Testing Procedures}
-    
-      Lane Change Test
-
-      Precision Following Test
-      
-      Zero Landmark Test
-
-    \end{frame}
+  %%% Lane Change Test %%%
+  \subsection{Lane Change Test}
 
     \begin{frame}{Lane Change Test}
+      % motivation and why test is useful
+    \end{frame}
+
+    \begin{frame}{Procedures}
       \begin{figure}
         \input{../graphics/lane_change_diagram}
       \end{figure}
+      \begin{itemize}
+        \item Lane change maneuver is visually obscured from follower 
+        \item 6 cones spaced at $\approx10m$
+      \end{itemize}
       % text describing test
     \end{frame}
-
-    \begin{frame}{Precision Following Test}
-      \begin{figure}
-        \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
-      \end{figure}   
-    \end{frame}
-
-    \begin{frame}{Zero Landmark Test}
-      \begin{figure}
-        \includegraphics[width=7cm]{../graphics/zero_landmark_path.png}
-      \end{figure}
-    \end{frame}
-
-
-  \subsection{Results}
-
-  %%% Lane Change Test
+    
     % What the drivers saw in each GUI during the lane change
-    \begin{frame}{Driver View}
+    \begin{frame}{Lange Change Test --- Driver View}
       \begin{figure}[ht] \centering
         \begin{minipage}[b]{0.45\linewidth} \centering 
           \includegraphics[width=\textwidth]{../graphics/lane_change.png}
@@ -277,7 +279,7 @@
           \includegraphics[width=\textwidth]{../graphics/lane_change_mono.png} 
           \caption{Qt GUI approaching the lane change maneuver}
         \end{minipage}
-    \end{figure}
+      \end{figure}
     \end{frame}
 
     % present data
@@ -288,29 +290,81 @@
     \begin{frame}{Lane Change Test --- Discussion}
     \end{frame}
 
-  %%% Precision Following Test
+  %%% Precision Following Test %%%
+
+  \subsection{Precision Foll. Test}
+
+    \begin{frame}{Precision Following Test}
+      % Describe what the PFT does and why it is valuable
+    \end{frame}
+
+    \begin{frame}{Precision Following Test --- Procedures}
+      \begin{figure}
+        \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
+      \end{figure}   
+      \begin{itemize}
+        \item 
+      \end{itemize}
+    \end{frame}
+
     % present data
     \begin{frame}{Precision Following Test --- Results}
-      \begin{figure}
-        \includegraphics[width=0.5\textwidth]{../graphics/precision_following_alert_percents.png}
-      \end{figure}
-      \begin{figure}
-        \includegraphics[width=0.5\textwidth]{../graphics/precision_following_mu_distribution.png}
-      \end{figure}
+      \begin{columns}
+        \begin{column}{0.5\textwidth}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/precision_following_alert_percents.png}
+          \end{figure}
+            % discuss results from both
+          \begin{itemize}
+            \item 
+            \item 
+            \item 
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/precision_following_mu_distribution.png}
+            % \caption{$\mu$ PDF's for best runs}
+          \end{figure}
+          \vspace{-20pt}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/precision_following_dev_pdf.png}
+          \end{figure}
+        \end{column}
+      \end{columns}
     \end{frame}
 
     % present data
     \begin{frame}{Precision Following Test --- Discussion}
     \end{frame}
 
-  %%% Zero Landmark Test
+  %%% Zero Landmark Test %%%
+
+  \subsection{Zero Landmark Test}
+
+    \begin{frame}{Zero Landmark Test --- Procedures}
+      % \vspace{-20pt}
+      \begin{itemize}
+        \item No lane markings
+        \item Wide, open expanse of asphalt
+        \item Conducted at night --- minimize visual cues
+      \end{itemize}
+
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.48\textwidth]{../graphics/zero_landmark_path.png}
+      \end{figure}
+      
+    \end{frame}
+
     % present data
-    \begin{frame}{Zero Landmark Test ---  Results}
+    \begin{frame}{Zero Landmark Test --- Results}
     \end{frame}
 
     % what happened
-    \begin{frame}{Zero Landmark Test ---  Discussion}
+    \begin{frame}{Zero Landmark Test --- Discussion}
     \end{frame}
+
 
 
 %%%%%%%%%%%%%%%%
@@ -322,3 +376,20 @@
   \end{frame}
 
 \end{document}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Font Sizes
+% \tiny
+% \scriptsize
+% \footnotesize
+% \small
+% \normalsize
+% \large
+% \Large
+% \LARGE
+% \huge
+% \Huge
