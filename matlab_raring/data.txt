@@ -1,0 +1,119 @@
+
+
+
+MOOSLog_7_4_2013_____17_00_33 -- earth, @ track
+	Deviation
+		Mean Abs:   0.97
+		Warn State: 17.09 %
+		Crit State: 6.33 %
+		Variance:   2.033522
+		Std Dev:    1.426016
+	Distance
+		Mean:       31.43
+		Warn State: 21.52 %
+		Crit State: 0.00 %
+		Variance:   223.771665
+		Std Dev:    14.958999
+	Covariance of Distance/Deviation:
+		[ 223.77     2.43]
+		[   2.43     2.03]
+
+
+
+MOOSLog_7_4_2013_____17_23_37 -- monolith, @ track
+	Deviation
+		Mean Abs:   0.47
+		Warn State: 3.23 %
+		Crit State: 0.65 %
+		Variance:   0.389606
+		Std Dev:    0.624184
+	Distance
+		Mean:       29.79
+		Warn State: 29.03 %
+		Crit State: 0.00 %
+		Variance:   122.394941
+		Std Dev:    11.063225
+	Covariance of Distance/Deviation:
+		[ 122.39    -0.64]
+		[  -0.64     0.39]
+
+
+
+MOOSLog_7_4_2013_____16_47_54 -- control, @ track
+	Deviation
+		Mean Abs:   0.21
+		Warn State: 0.00 %
+		Crit State: 0.00 %
+		Variance:   0.069686
+		Std Dev:    0.263980
+	Distance
+		Mean:       24.11
+		Warn State: 82.67 %
+		Crit State: 4.00 %
+		Variance:   69.517056
+		Std Dev:    8.337689
+	Covariance of Distance/Deviation:
+		[  69.52    -0.34]
+		[  -0.34     0.07]
+
+
+
+MOOSLog_16_4_2013_____21_23_31 -- earth, @ skidpad
+	Deviation
+		Mean Abs:   2.74
+		Warn State: 25.87 %
+		Crit State: 11.19 %
+		Variance:   17.182457
+		Std Dev:    4.145173
+	Distance
+		Mean:       38.52
+		Warn State: 0.00 %
+		Crit State: 0.00 %
+		Variance:   214.162082
+		Std Dev:    14.634278
+	Covariance of Distance/Deviation:
+		[ 214.16   -16.02]
+		[ -16.02    17.18]
+
+
+
+MOOSLog_16_4_2013_____21_15_08 -- monolith, @ skidpad
+	Deviation
+		Mean Abs:   3.68
+		Warn State: 39.35 %
+		Crit State: 25.99 %
+		Variance:   32.095127
+		Std Dev:    5.665256
+	Distance
+		Mean:       37.14
+		Warn State: 0.00 %
+		Crit State: 0.00 %
+		Variance:   197.157968
+		Std Dev:    14.041295
+	Covariance of Distance/Deviation:
+		[ 197.16     3.23]
+		[   3.23    32.10]
+
+
+
+MOOSLog_16_4_2013_____21_38_43 -- control, @ skidpad
+	Deviation
+		Mean Abs:   0.73
+		Warn State: 16.67 %
+		Crit State: 2.78 %
+		Variance:   1.072009
+		Std Dev:    1.035379
+	Distance
+		Mean:       18.43
+		Warn State: 22.22 %
+		Crit State: 2.78 %
+		Variance:   27.703890
+		Std Dev:    5.263449
+	Covariance of Distance/Deviation:
+		[  27.70    -0.41]
+		[  -0.41     1.07]
+
+
+
+-------- Best --------
+

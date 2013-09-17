@@ -31,6 +31,7 @@
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
+
 \AtBeginSection[] {
   \begin{frame}<beamer>
     \frametitle{Section Outline}
@@ -39,6 +40,7 @@
 }
 
 \bibliography{../bib/master.bib} % problems here
+\newcommand{\citeitem}[1]{[\emph{\Citeauthor*{#1}, \citeyear{#1} }]}
 
 \title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
 \author[]{Robert Cofield, Scott Martin, David Bevly}
@@ -146,12 +148,12 @@
       \begin{column}{0.5\textwidth}
         \footnotesize Relay to user
         \begin{itemize} \footnotesize
-          \item 
+          \item Lateral path deviation alerts
+          \item Path separation distance alerts
         \end{itemize}
       \end{column}
     \end{columns}
   \end{frame}
-
 
 
   %%% Qt GUI %%%%
@@ -216,7 +218,6 @@
   \subsection{Hardware \& Setup}
 
     \begin{frame}{Hardware}
-
         \begin{minipage}{0.45\textwidth}
           \centering
           \includegraphics[width=4cm]{../graphics/hardware_flow.png}
@@ -228,23 +229,22 @@
             \item Digi Extend 900 Mhz radio
           \end{itemize}
         \end{minipage}
-
         \begin{figure}
           \includegraphics[width=4cm]{../graphics/lead_hardware.jpg}
         \end{figure}
-
     \end{frame}
 
     \begin{frame}{Experimentation}
       \begin{figure}[ht] \centering
         \includegraphics[width=5cm] {../graphics/driver_view.jpg}
-        \caption{View from the driver's seat} \label{fig:driver_view}
+        \caption{\scriptsize View from the driver's seat}
       \end{figure}
-
-      \begin{itemize}
+      \vspace{-20pt}
+      \begin{itemize} \footnotesize
         \item 3 vehicle platforms used: Infiniti G35 (sedan), Hyndai Sonata (SUV), Chevrolet Corvette (coupe)
         \item 11 individual test drivers
         \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$
+        \item 3 testing procedures, performed with each GUI (and without aid where applicable)
       \end{itemize}
     \end{frame}
 
@@ -252,17 +252,17 @@
   %%% Lane Change Test %%%
   \subsection{Lane Change Test}
 
-    \begin{frame}{Lane Change Test}
-      % motivation and why test is useful
-    \end{frame}
-
-    \begin{frame}{Procedures}
+    \begin{frame}{Lane Change Test --- Procedures}
+      \vspace{-30pt}
       \begin{figure}
         \input{../graphics/lane_change_diagram}
       \end{figure}
-      \begin{itemize}
-        \item Lane change maneuver is visually obscured from follower 
-        \item 6 cones spaced at $\approx10m$
+      \vspace{-40pt}
+      \begin{itemize} \small
+        \item Lane change maneuver is visually obscured from follower.
+        \item Following driver signalled to begin once maneuver completed.
+        \item 6 cones spaced at $\approx10m$.
+        \item Results treated as pass/fail.
       \end{itemize}
       % text describing test
     \end{frame}
@@ -284,26 +284,43 @@
 
     % present data
     \begin{frame}{Lane Change Test --- Results}
+      \begin{itemize} \footnotesize
+        \item Ran test 10 times with 4 drivers
+        \item Cone placement and start/end points remained constant
+        \item Runs eliminated in which driver 
+      \end{itemize}
+      \vspace{-10pt}
+      \begin{table}[htbp] \centering \footnotesize
+        % \caption{Cone pairs chosen in the lane change replication test}
+        \begin{tabular}{rc|cc}
+          GUI&    Run \#  &     Leader&    Follower \\\hline\hline
+          Earth&      1       &       1   &    3 \\
+               &      2       &       3   &    4 \\ \hline
+          Qt   &      3       &       2   &    3 \\
+               &      4       &       5   &    5 \\ \hline   
+        \end{tabular}
+        \label{tab:lanechangeresults}
+      \end{table}
+      \begin{itemize} \footnotesize
+        \item Drivers reported path appeared to be erroneous relative to satellite imagery (e.g., off the road).
+        \item Google Earth positioning errors found to vary up to $50m$ \citeitem{ge_accuracy}.
+        \item Typically low speeds when deciding where to turn $(<10m/s)$
+      \end{itemize}
     \end{frame}
 
-    % what happened
-    \begin{frame}{Lane Change Test --- Discussion}
-    \end{frame}
 
   %%% Precision Following Test %%%
 
   \subsection{Precision Foll. Test}
 
-    \begin{frame}{Precision Following Test}
-      % Describe what the PFT does and why it is valuable
-    \end{frame}
-
     \begin{frame}{Precision Following Test --- Procedures}
       \begin{figure}
         \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
       \end{figure}   
-      \begin{itemize}
-        \item 
+      \begin{itemize} \footnotesize
+        \item Two-lane track similar to 
+        \item Performed with each GUI individually, and without aid as control
+        \item Run with fewest combined alerts selected as `best' for each.
       \end{itemize}
     \end{frame}
 
@@ -316,7 +333,7 @@
           \end{figure}
             % discuss results from both
           \begin{itemize}
-            \item 
+            \item Kernel smoothed PDF estimates.
             \item 
             \item 
           \end{itemize}
@@ -341,24 +358,44 @@
   %%% Zero Landmark Test %%%
 
   \subsection{Zero Landmark Test}
-
     \begin{frame}{Zero Landmark Test --- Procedures}
       % \vspace{-20pt}
       \begin{itemize}
         \item No lane markings
         \item Wide, open expanse of asphalt
-        \item Conducted at night --- minimize visual cues
+        \item Conducted at night --- minimized visual cues
       \end{itemize}
-
       \begin{figure}
         \centering
-        \includegraphics[width=0.48\textwidth]{../graphics/zero_landmark_path.png}
-      \end{figure}
-      
+        \includegraphics[width=0.55\textwidth]{../graphics/zero_landmark_path.png}
+      \end{figure}     
     \end{frame}
 
     % present data
     \begin{frame}{Zero Landmark Test --- Results}
+      \begin{columns}
+        \begin{column}{0.5\textwidth}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/zero_landmark_alert_percents.png}
+          \end{figure}
+            % discuss results from both
+          \begin{itemize} \scriptsize
+            \item Kernel smoothed PDF estimates.
+            \item 
+            \item 
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/zero_landmark_mu_distribution.png}
+            % \caption{$\mu$ PDF's for best runs}
+          \end{figure}
+          \vspace{-20pt}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/pdf_zero_landmark_deviation.png}
+          \end{figure}
+        \end{column}
+      \end{columns}
     \end{frame}
 
     % what happened
@@ -372,7 +409,11 @@
 %$%%%%%%%%%%%%%%
 \section{Conclusion}
 
-  \begin{frame}
+  \begin{frame}{Future Work}
+    \begin{itemize}
+      \item Reduce latency in combined system
+      \item 
+    \end{itemize}
   \end{frame}
 
 \end{document}
