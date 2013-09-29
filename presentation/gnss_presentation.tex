@@ -1,16 +1,10 @@
 \documentclass{beamer}
 \usetheme[hideothersubsections]{AUTheme}
-% \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{bibliography item}[text]%,
 \setbeamertemplate{footline}[frame number]
-
 \usepackage[scaled]{helvet}
-
 \usepackage{url}
-
 \usepackage{tikz,pgf}
-\usetikzlibrary{arrows}
-
 \usepackage{epstopdf}
 \usepackage{siunitx}
 \usepackage{amsmath}
@@ -18,19 +12,16 @@
 \usepackage[maxcitenames = 1, mincitenames=1,backend=bibtex]{biblatex}
 \usepackage{multicol}
 \usepackage{wrapfig}
-% \usepackage{cutwin} % this is awful.
-% \usepackage[utf8]{inputenc}
 \usepackage{hypcap}
 \usepackage{lipsum}
 \usepackage[absolute,overlay]{textpos}
-% \usepackage[sf,sl,outermarks]{titlesec}
-\usepackage{caption}
+\usepackage[justification=centering]{caption}
 
 \captionsetup[figure]{labelformat=empty}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-
+\usetikzlibrary{arrows}
 
 \AtBeginSection[] {
   \begin{frame}<beamer>
@@ -61,11 +52,25 @@
 
   %% Military 
   \begin{frame}{Motivation}
-    \begin{figure}
-      \includegraphics[width=5cm]{../graphics/convoy_sandstorm_orange.jpg}
-      \vspace{-10pt}
-      \caption{\tiny Source: \citeitem{convoy_dust_orange}}
-    \end{figure}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{figure}
+          \includegraphics[width=\textwidth]{../graphics/convoy_sandstorm_orange.jpg}
+          \vspace{-10pt}
+          \caption{\tiny Source: \citeitem{convoy_dust_orange}}
+        \end{figure}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{itemize} \footnotesize
+          \item Vehicle convoys, UXO mapping/clearing, strategic vehicle placement, accident avoidance, planting/harvesting
+        \end{itemize}
+      \end{column}
+    \end{columns}
+    \begin{itemize} \footnotesize
+      \item The ability to precisely follow another vehicle with large separation distances would have an immediate impact on military ground vehicle systems and future automated civilian vehicle systems.
+      \item Many current solutions require vehicles to be in sight of one another so perception sensors can obtain range and bearing information
+      \item GPS can provide high accuracy relative position information ($<5cm$)
+    \end{itemize}
   \end{frame}
 
 
@@ -79,24 +84,69 @@
 
     %% brief explanation
     \begin{frame}{Dynamic Base Real-Time Kinematic GNSS}
-      \begin{itemize}
-        \item LAMBDA Integer-Fixing Method
+      \begin{itemize} \footnotesize
+        \item Code based range measurements have meter level accuracy.
+        \item Phase based range measurements are near millimeter level accurate, but are ambiguous.
+        \item Relative position measurements are formed by differencing range measurements between two receivers.
       \end{itemize}
+      \begin{minipage}{0.45\linewidth}
+        \small Integers fixed using LAMBDA search method.
+        \begin{itemize} \footnotesize
+          \item 2 candidates
+          \item Minimum ratio of 3.00
+        \end{itemize}
+      \end{minipage}
+      \begin{minipage}{0.45\linewidth}
+        \begin{figure} \centering
+        \includegraphics[width=3.5cm]{../graphics/drtk_errors.png}
+        \caption{ \footnotesize North Error $\sigma=0.70cm$\\East Error $\sigma=0.68cm$ }
+        \end{figure}
+      \end{minipage}
     \end{frame}
 
-    %% discuss accuracy
-    \begin{frame}{Errors in DRTK}
+
+    \begin{frame}{Fault Detection \& Exclusion}
+      \begin{columns}
+        \begin{column}{0.5\linewidth}
+          \begin{itemize} \footnotesize
+            \item Closely coupled architecture allows for monitoring individual satellites
+            \item Local errors usually affect individual signals
+            \item Exclude solution degrading outliers
+            \item Normalized innovation parameter
+            \item Scaled by measurement noise
+            \item If parameter over threshold, ignore measurement
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+          \Large \centering $y_i=\frac{z_i}{\sigma_i}$
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/fde_plot.png}
+          \end{figure}
+        \end{column}
+      \end{columns}
     \end{frame}
+
 
   \subsection{TDCP}
 
     %% brief explanation
     \begin{frame}{Time-Differenced Carrier Phase GNSS}
+      \begin{figure}[ht] \centering
+        \begin{minipage}[b]{0.45\linewidth}
+          \includegraphics[width=\textwidth]{../graphics/tdcp_diagram.png}
+          \caption{}
+        \end{minipage}
+        \begin{minipage}[b]{0.5\linewidth}
+          \includegraphics[width=\textwidth]{../graphics/tdcp_errors.png}
+          \caption{\footnotesize $\Delta$ North Error $\sigma=0.75mm$\\$\Delta$ East Error $\sigma=1.09mm$}
+        \end{minipage}
+      \end{figure}
+      \begin{itemize} \footnotesize
+        \item Accurate change in position can be estimated using time differenced carrier phase (TDCP) measurements.
+        \item Differencing two measurements across time “removes” atmospheric and SV clock errors, and the integer ambiguity, \textit{assuming the time difference is small.}
+      \end{itemize}
     \end{frame}
 
-    %% discuss accuracy
-    \begin{frame}{Errors in TDCP}
-    \end{frame}
 
   \subsection{Virtual Path}
 
@@ -105,6 +155,12 @@
       \begin{figure}
         \includegraphics[width=10cm]{../graphics/path_algorithm.png}
       \end{figure}
+      \begin{itemize} \footnotesize
+        \item If the change in vehicle position can be obtained with sufficient accuracy, the relative position vector from a previous time can be translated to the current time.
+        \item This new RPV is between a past position of the lead vehicle and the current position of the following vehicle, so the effective following distance has been reduced.
+        \item TDCP errors grow over time, so each measurement epoch incurs more error.
+        \item Longer paths and lower speeds accumulate more error.
+      \end{itemize}
     \end{frame}
 
 
@@ -114,58 +170,102 @@
 
 \section{GUI}
 
-
-  % Transition slide from Literature
-  % Talk about waypoint following with Prowler
-  \begin{frame}{Real-Time Implementation}
-    \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../graphics/data_algo.png}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-      \begin{itemize} \small
-        \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
-        \item Unmanned Following
-        \item Waypoint-based control
-        \item No intuitive method for quickly tuning algorithms \& visualizing errors
-      \end{itemize}
-    \end{minipage}
-  \end{frame}
-
-  %% ConOps
-  \begin{frame}{Concept of Operation}
-    \begin{figure}
-      \includegraphics[width=0.8\textwidth]{../graphics/blackbox_flowchart.png}
-    \end{figure}
-    \begin{columns}  
-      \begin{column}{0.5\textwidth}
-        \footnotesize User inputs
-        \begin{itemize} \footnotesize
-          \item Critical alert values\\ ($\mu_{crit}~,~d_{crit}$)
-          \item Warning alert values\\ ($\mu_{warn}$~,~$d_{warn}$)
-        \end{itemize}
-      \end{column}
-      \begin{column}{0.5\textwidth}
-        \footnotesize Relay to user
-        \begin{itemize} \footnotesize
-          \item Lateral path deviation alerts
-          \item Path separation distance alerts
-        \end{itemize}
-      \end{column}
-    \end{columns}
-  \end{frame}
-
-
-  %%% Qt GUI %%%%
-  \subsection{Qt}
-
     % what led to simple GUI
     % mention SBIR?
     \begin{frame}{Initial Design Goals}
-      \begin{itemize}
-        \item
-      \end{itemize}
+      \begin{columns}
+        \begin{column}{0.5\linewidth}
+          Army SBIR A131-027-133
+          \begin{itemize} \footnotesize
+            \item Yuma, AZ desert --- extremely dusty, zero visibility.
+            \item Convoy driving with 10-200m desired longitudinal spacing.
+            \item Needed quickly intelligible display of distance to adjacent lead vehicle.
+          \end{itemize}
+          Key Goals
+          \begin{itemize} \footnotesize
+            \item Relay distance, deviation alerts
+            \item Intuitive, easy to understand display \& controls
+            \item Graphical representation of path
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+          \begin{figure}
+            \includegraphics[width=\textwidth]{../graphics/initial_concept.png}
+            \caption{\footnotesize Initial concept for simple GUI}
+          \end{figure}
+        \end{column}
+      \end{columns}
     \end{frame}
+
+    % transitional slide from literature
+    % Talk about waypoint following with Prowler
+    \begin{frame}{Real-Time Implementation}
+      \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../graphics/data_algo.png}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \begin{itemize} \small
+          \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
+          \item Unmanned Following
+          \item Waypoint-based control
+          \item No intuitive method for quickly tuning algorithms \& visualizing errors
+        \end{itemize}
+      \end{minipage}
+    \end{frame}
+
+
+  \subsection{Design}
+
+    %% ConOps
+    \begin{frame}{Concept of Operation}
+      \begin{figure}
+        \includegraphics[width=0.8\textwidth]{../graphics/blackbox_flowchart.png}
+      \end{figure}
+      \begin{columns}  
+        \begin{column}{0.5\textwidth}
+          \footnotesize User inputs
+          \begin{itemize} \footnotesize
+            \item Critical alert values\\ ($\mu_{crit}~,~d_{crit}$)
+            \item Warning alert values\\ ($\mu_{warn}$~,~$d_{warn}$)
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \footnotesize Relay to user
+          \begin{itemize} \footnotesize
+            \item Lateral path deviation alerts
+            \item Path separation distance alerts
+          \end{itemize}
+        \end{column}
+      \end{columns}
+    \end{frame}
+
+
+    \begin{frame}{Design Procedure}
+
+      Primary Refinement Loop
+      \begin{enumerate} \footnotesize
+        \item Design modification and/or feature addition
+        \item Implement modifications
+        \item Validate display information
+        \item Perform human testing
+        \item Post processing analysis
+        \item Qualitative feedback
+      \end{enumerate}        
+
+      Rejected Features
+      \begin{itemize}
+        \item Velocity scaling
+        \item Leader always visible
+        \item Most feature additions can be turned off
+      \end{itemize}
+      
+      % Position solution & path debugging features
+
+    \end{frame}
+
+  %%% Qt GUI %%%%
+  \subsection{Qt}
 
     \begin{frame}{Qt-Based GUI --- Data Display}
       \begin{figure}[ht] \centering
@@ -185,27 +285,49 @@
   %%% Google Earth GUI %%%
   \subsection{Earth}
 
-    \begin{frame}{Google Earth GUI --- Data Display}
-    \end{frame}
-
-    \begin{frame}{Google Earth GUI -- Controls}
+    \begin{frame}{Google Earth GUI --- Display}
       \begin{figure}
-        \includegraphics[width=0.9\textwidth]{../graphics/earth_slow.png}
+        \includegraphics[width=7.5cm]{../graphics/earth_display.png}
       \end{figure}
     \end{frame}
 
-
-  \subsection{Middleware}
-
-    % talk about MOOS , etc
-    \begin{frame}{Middleware}
+    \begin{frame}{Google Earth GUI --- Control}
+      \begin{figure}[!htb] %% This is the best way to do this.
+        \minipage{0.32\textwidth} \centering
+          \includegraphics[height=0.85\textheight]{../graphics/earth_data.png}
+          \caption{\footnotesize Data display tab}
+        \endminipage\hfill
+        \minipage{0.32\textwidth} \centering
+          \includegraphics[height=0.85\textheight]{../graphics/earth_parameters.png}
+          \caption{\footnotesize Parameter input tab}
+        \endminipage\hfill
+        \minipage{0.32\textwidth} \centering
+          \includegraphics[height=0.85\textheight]{../graphics/earth_view.png}
+          \caption{\footnotesize View control tab}
+        \endminipage
+      \end{figure}
     \end{frame}
 
     %% introduce interpolation
-    \begin{frame}{Interpolation}
-      \begin{figure}[ht] \centering
-        \includegraphics[width=5cm] {../graphics/middleware_diagram.png}
-      \end{figure}
+    \begin{frame}{Data Smoothing}
+      % \begin{columns}
+        % \begin{column}{0.5\linewidth}
+          \begin{itemize} \footnotesize
+            \item Satellite imagery made measurement updates disorienting.
+            \item Smoothing techniques needed for courses, positions, and path.
+            \item Linear interpolation selected for speed.
+            \item Introduce lag of one timestep.
+          \end{itemize}
+          \vspace{-20pt}
+          \begin{figure}[ht] \centering
+            \includegraphics[width=6cm] {../graphics/middleware_diagram.png}
+            \caption{\scriptsize Algorithm for adding data smoothing optionality}
+          \end{figure}
+        % \end{column}
+        % \begin{column}{0.5\linewidth}
+
+        % \end{column}
+      % \end{columns}
     \end{frame}
 
 
@@ -215,53 +337,54 @@
 
 \section{Experimentation}
 
-  \subsection{Hardware \& Setup}
 
-    \begin{frame}{Hardware}
-        \begin{minipage}{0.45\textwidth}
-          \centering
-          \includegraphics[width=4cm]{../graphics/hardware_flow.png}
-        \end{minipage}
-        \begin{minipage}{0.45\textwidth}
-          \begin{itemize}
-            \item Novatel Propak v3 (OEMV board) L1/L2
-            \item Pinwheel Antenna
-            \item Digi Extend 900 Mhz radio
-          \end{itemize}
-        \end{minipage}
-        \begin{figure}
-          \includegraphics[width=4cm]{../graphics/lead_hardware.jpg}
-        \end{figure}
-    \end{frame}
+  \begin{frame}{Tests Performed}
+    \begin{figure}[ht] \centering
+      \includegraphics[width=5cm] {../graphics/driver_view.jpg}
+      \caption{\scriptsize View from the driver's seat}
+    \end{figure}
+    \vspace{-20pt}
+    \begin{itemize} \footnotesize
+      \item 11 individual test drivers
+      \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$ (for gravel, asphalt \citeitem{mu})
+      \item 3 testing procedures: 
+      \item Precision Following \& Zero Landmark Tests performed without driver assistance, as a control group.
+    \end{itemize}
+  \end{frame}
 
-    \begin{frame}{Experimentation}
-      \begin{figure}[ht] \centering
-        \includegraphics[width=5cm] {../graphics/driver_view.jpg}
-        \caption{\scriptsize View from the driver's seat}
-      \end{figure}
+  \begin{frame}{Hardware \& Setup}
+      \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=4cm]{../graphics/hardware_flow.png}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=4cm]{../graphics/lead_hardware.jpg}
+      \end{minipage}
       \vspace{-20pt}
-      \begin{itemize} \footnotesize
+      \begin{itemize}
         \item 3 vehicle platforms used: Infiniti G35 (sedan), Hyndai Sonata (SUV), Chevrolet Corvette (coupe)
-        \item 11 individual test drivers
-        \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$
-        \item 3 testing procedures, performed with each GUI (and without aid where applicable)
+        \item Novatel Propak v3 (OEMV board) L1/L2
+        \item Pinwheel Antenna
+        \item Digi Extend 900 Mhz radio
       \end{itemize}
-    \end{frame}
+  \end{frame}
 
 
   %%% Lane Change Test %%%
   \subsection{Lane Change Test}
 
-    \begin{frame}{Lane Change Test --- Procedures}
+    \begin{frame}{Lane Change Test --- Procedure}
       \vspace{-30pt}
       \begin{figure}
         \input{../graphics/lane_change_diagram}
       \end{figure}
       \vspace{-40pt}
-      \begin{itemize} \small
+      \begin{itemize} \footnotesize
         \item Lane change maneuver is visually obscured from follower.
         \item Following driver signalled to begin once maneuver completed.
-        \item 6 cones spaced at $\approx10m$.
+        \item Driver permitted to drive at most comfortable speed.
+        \item Lane change between 5 cone pairs spaced at $\approx10m$.
         \item Results treated as pass/fail.
       \end{itemize}
       % text describing test
@@ -284,27 +407,25 @@
 
     % present data
     \begin{frame}{Lane Change Test --- Results}
-      \begin{itemize} \footnotesize
-        \item Ran test with 4 drivers.
-        \item Cone placement and start/end points remained constant.
-        \item Runs eliminated in which driver ... 
-      \end{itemize}
-      \vspace{-10pt}
+      % \begin{itemize} \footnotesize
+      % \end{itemize}
+      % \vspace{-10pt}
       \begin{table}[htbp] \centering \footnotesize
         % \caption{Cone pairs chosen in the lane change replication test}
-        \begin{tabular}{rc|cc}
-          GUI&    Run \#  &     Leader&    Follower \\\hline\hline
-          Earth&      1       &       1   &    3 \\
-               &      2       &       3   &    4 \\ \hline
-          Qt   &      3       &       2   &    3 \\
-               &      4       &       5   &    5 \\ \hline   
+        \begin{tabular}{rc|c}
+          GUI&    Driver \#&     Overshoot \\\hline\hline
+          Earth&      1       &       $+20m$  \\
+               &      2       &       $+10m$  \\ \hline
+          Qt   &      3       &       $+10m$  \\
+               &      4       &       $0m$    \\ \hline  
         \end{tabular}
         \label{tab:lanechangeresults}
       \end{table}
       \begin{itemize} \footnotesize
+        \item Ran test with 4 individual drivers.
         \item Drivers reported path appeared to be erroneous relative to satellite imagery (e.g., off the road).
         \item Google Earth positioning errors found to vary up to $50m$ \citeitem{ge_accuracy}.
-        \item Typically low speeds when deciding where to turn $(<10m/s)$
+        \item Typically low speeds when deciding where to turn $(<10m/s)$.
       \end{itemize}
     \end{frame}
 
@@ -313,13 +434,13 @@
 
   \subsection{Precision Foll. Test}
 
-    \begin{frame}{Precision Following Test --- Procedures}
+    \begin{frame}{Precision Following Test --- Procedure}
       \begin{figure}
         \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
       \end{figure}   
       \begin{itemize} \footnotesize
-        \item Two-lane track similar to 
-        \item Performed with each GUI individually, and without aid as control
+        \item Two-lane track similar to US interstate.
+        \item Performed with each GUI individually, and without aid as control.
         \item Run with fewest combined alerts selected as `best' for each.
       \end{itemize}
     \end{frame}
@@ -349,14 +470,11 @@
       \end{columns}
     \end{frame}
 
-    % present data
-    \begin{frame}{Precision Following Test --- Discussion}
-    \end{frame}
 
   %%% Zero Landmark Test %%%
 
   \subsection{Zero Landmark Test}
-    \begin{frame}{Zero Landmark Test --- Procedures}
+    \begin{frame}{Zero Landmark Test --- Procedure}
       % \vspace{-20pt}
       \begin{itemize}
         \item No lane markings.
@@ -390,13 +508,10 @@
           \vspace{-20pt}
           \begin{figure}
             \includegraphics[width=\textwidth]{../graphics/pdf_zero_landmark_deviation.png}
+            \caption{\footnotesize Sample path taken by leader}
           \end{figure}
         \end{column}
       \end{columns}
-    \end{frame}
-
-    % what happened
-    \begin{frame}{Zero Landmark Test --- Discussion}
     \end{frame}
 
 
@@ -408,9 +523,14 @@
 
   \begin{frame}{Future Work}
     \begin{itemize}
-      \item Reduce latency in combined system
-      \item 
+      \item Reduce latency in combined system.
+      \item Increase receiver frequency used.
+      \item Combine simplicity of Qt GUI with aesthetics and orientability of Earth GUI.
     \end{itemize}
+  \end{frame}
+
+  \begin{frame}{}
+    \centering \Huge Questions?
   \end{frame}
 
 \end{document}
