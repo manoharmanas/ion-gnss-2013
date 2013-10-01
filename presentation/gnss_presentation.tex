@@ -35,8 +35,8 @@
 \newcommand{\citeitem}[1]{[\emph{\Citeauthor*{#1}, \citeyear{#1} }]}
 
 \title[DRTK Driver Assistance]{An On-Line Visual Driver Aid for\\ Safe and Precise Convoy Following in\\ Visibility-Impaired Conditions}
-\author[]{Robert Cofield, Scott Martin, David Bevly}
-\date{September 18, 2013} 
+\author[]{Robert Cofield}
+\date{October 1, 2013} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -52,7 +52,7 @@
 \section{Motivation}
 
   %% Military 
-  \begin{frame}{Motivation}
+  \begin{frame}{Path Following --- Motivation}
     \begin{columns}
       \begin{column}{0.5\textwidth}
         \begin{figure}
@@ -110,8 +110,8 @@
       \begin{columns}
         \begin{column}{0.5\linewidth}
           \begin{itemize} \footnotesize
-            \item Monitoring individual satellites to compute RPV
             \item Local errors usually affect individual signals
+            \item Monitoring individual satellites to compute RPV
             \item Exclude solution degrading outliers
             \vfill
             \item Normalized innovation parameter
@@ -169,29 +169,29 @@
     \end{frame}
 
 
+    % transitional slide from literature
+    % Talk about waypoint following with Prowler
+    \begin{frame}{Real-Time Implementation}
+      \begin{minipage}{\textwidth}
+        \centering
+        \includegraphics[height=\textheight]{../graphics/data_algo.png}
+      \end{minipage}
+      % \begin{minipage}{0.45\textwidth}
+      %   \begin{itemize} \small
+      %     \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
+      %     \item Unmanned Following
+      %     \item Waypoint-based control
+      %     \item No intuitive method for quickly tuning algorithms \& visualizing errors
+      %   \end{itemize}
+      % \end{minipage}
+    \end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Presentation of final products %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{GUI}
-
-    % transitional slide from literature
-    % Talk about waypoint following with Prowler
-    \begin{frame}{Real-Time Implementation}
-      \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{../graphics/data_algo.png}
-      \end{minipage}
-      \begin{minipage}{0.45\textwidth}
-        \begin{itemize} \small
-          \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
-          \item Unmanned Following
-          \item Waypoint-based control
-          \item No intuitive method for quickly tuning algorithms \& visualizing errors
-        \end{itemize}
-      \end{minipage}
-    \end{frame}
-
 
   \subsection{Design}
 
@@ -276,11 +276,11 @@
       \end{figure}
       \begin{columns}
         \begin{column}{0.5\textwidth} \centering
-          \begin{displaymath} \tiny \centering
-            d_{stop}^{min} = \left( \frac {1} {\mu g} \right) \left(\frac {||v_{foll}||^2} {2} \right) \\
-            \mu_{warn} = 0.5 \\
-            \mu_{crit} = 1.0
-          \end{displaymath}
+          % \begin{displaymath} \tiny \centering
+            $d_{stop}^{min} = \left( \frac {1} {\mu g} \right) \left(\frac {||v_{foll}||^2} {2} \right)$ \\
+            $\mu_{warn} = 0.5$ \\
+            $\mu_{crit} = 1.0$
+          % \end{displaymath}
         \end{column}
         \begin{column}{0.5\textwidth}
           \begin{itemize} \scriptsize
@@ -440,7 +440,8 @@
     \vspace{-20pt}
     \begin{itemize} \scriptsize
       \item 11 individual test drivers
-      \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$ (for gravel, asphalt \citeitem{mu})
+      \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$ (for gravel, asphalt \citeitem{mu}).
+      \item Deviation alert values set to $d_{warn}=1.0m~,~d_{crit}=2.0m$.
       \item 3 testing procedures (`lane change', `precision following', `zero landmark') performed with tools individually.
       \item Precision Following \& Zero Landmark Tests also performed without driver assistance, as a control group.
     \end{itemize}
@@ -507,7 +508,7 @@
       \begin{table}[htbp] \centering \footnotesize
         % \caption{Cone pairs chosen in the lane change replication test}
         \begin{tabular}{rc|c}
-          GUI&    Driver \#&     Overshoot \\\hline\hline
+          GUI&    Run \#&     Overshoot \\\hline\hline
           Earth&      1       &       $+20m$  \\
                &      2       &       $+10m$  \\ \hline
           Qt   &      3       &       $+10m$  \\
@@ -516,7 +517,7 @@
         \label{tab:lanechangeresults}
       \end{table}
       \begin{itemize} \footnotesize
-        \item Ran test with 4 individual drivers.
+        \item Allowed drivers time to acclimate to driving with the visual aids.
         \item Drivers reported path appeared to be erroneous relative to satellite imagery (e.g., off the road).
         \item Google Earth positioning errors found to vary up to $50m$ \citeitem{ge_accuracy}.
         \item Typically low speeds when deciding where to turn $(<10m/s)$.
@@ -533,8 +534,9 @@
         \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
       \end{figure}   
       \begin{itemize} \footnotesize
-        \item Desired test to closely examine effects on lateral deviation 
+        \item Desired test to closely examine effects on lateral deviation \& following distance --- daily driving.
         \item NCAT test track (Opelika, AL) --- two-lane track similar to US interstate.
+        \item Sinusoidal path with ground speed oscillating $20-30~m/s$.
         \item Performed with each GUI individually, and without aid as control.
         \item Run with fewest combined alerts selected as `best' for each.
       \end{itemize}
@@ -616,11 +618,15 @@
 %$%%%%%%%%%%%%%%
 \section{Conclusion}
 
-  \begin{frame}{Future Work}
+  \begin{frame}{Conclusions \& Future Work}
     \begin{itemize}
-      \item Reduce latency in combined system.
-      \item Increase receiver frequency used.
-      \item Combine simplicity of Qt GUI with aesthetics and orientability of Earth GUI.
+      \item Excellent at helping to maintain a safe following distance
+      \item Faster operation to increase lateral deviation performance
+        \begin{itemize}
+          \item Reduce latency in combined system.
+          \item Increase receiver frequency used.
+        \end{itemize}
+      \item Combine simplicity of Qt GUI with aesthetics of Earth GUI.
     \end{itemize}
   \end{frame}
 
