@@ -4,7 +4,7 @@
 \setbeamertemplate{footline}[frame number]
 \usepackage[scaled]{helvet}
 \usepackage{url}
-\usepackage{tikz,pgf}
+\usepackage{tikz, pgf}
 \usepackage{epstopdf}
 \usepackage{siunitx}
 \usepackage{amsmath}
@@ -21,7 +21,8 @@
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-\usetikzlibrary{arrows}
+\usetikzlibrary{calc, arrows, shapes}
+% \usetkzobj{angles} % important you want to use angles
 
 \AtBeginSection[] {
   \begin{frame}<beamer>
@@ -78,7 +79,7 @@
 %% Literature & Previous Work %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Literature}
+\section{Background}
 
   \subsection{DRTK}
 
@@ -109,17 +110,20 @@
       \begin{columns}
         \begin{column}{0.5\linewidth}
           \begin{itemize} \footnotesize
-            \item Closely coupled architecture allows for monitoring individual satellites
+            \item Monitoring individual satellites to compute RPV
             \item Local errors usually affect individual signals
             \item Exclude solution degrading outliers
+            \vfill
             \item Normalized innovation parameter
-            \item Scaled by measurement noise
+            % \item Utilize carrier-noise ratio, $C_{n0}$
             \item If parameter over threshold, ignore measurement
           \end{itemize}
         \end{column}
         \begin{column}{0.5\linewidth}
-          \Large \centering $y_i=\frac{z_i}{\sigma_i}$
-          \begin{figure}
+          \begin{displaymath}
+            y_i=\frac{z_i}{\sigma_i} ~~~\le 3.0 \rightarrow keep
+          \end{displaymath}
+          \begin{figure}[ht] \centering 
             \includegraphics[width=\textwidth]{../graphics/fde_plot.png}
           \end{figure}
         \end{column}
@@ -153,12 +157,13 @@
     %% discuss virtual leader & path summation
     \begin{frame}{Construction of Path}
       \begin{figure}
-        \includegraphics[width=10cm]{../graphics/path_algorithm.png}
+        \includegraphics[width=9cm]{../graphics/path_algorithm.png}
       \end{figure}
-      \begin{itemize} \footnotesize
-        \item If the change in vehicle position can be obtained with sufficient accuracy, the relative position vector from a previous time can be translated to the current time.
-        \item This new RPV is between a past position of the lead vehicle and the current position of the following vehicle, so the effective following distance has been reduced.
-        \item TDCP errors grow over time, so each measurement epoch incurs more error.
+      \vspace{-10pt}
+      \begin{itemize} \scriptsize
+        \item The relative position vector from a previous time can be translated to the current time.
+        \item This new RPV is between a past position of the lead vehicle and the current position of the following vehicle.
+        \item TDCP errors grow over time, so each measurement epoch between vehicles incurs more error.
         \item Longer paths and lower speeds accumulate more error.
       \end{itemize}
     \end{frame}
@@ -169,6 +174,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{GUI}
+
+    % transitional slide from literature
+    % Talk about waypoint following with Prowler
+    \begin{frame}{Real-Time Implementation}
+      \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../graphics/data_algo.png}
+      \end{minipage}
+      \begin{minipage}{0.45\textwidth}
+        \begin{itemize} \small
+          \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
+          \item Unmanned Following
+          \item Waypoint-based control
+          \item No intuitive method for quickly tuning algorithms \& visualizing errors
+        \end{itemize}
+      \end{minipage}
+    \end{frame}
+
+
+  \subsection{Design}
 
     % what led to simple GUI
     % mention SBIR?
@@ -197,25 +222,6 @@
       \end{columns}
     \end{frame}
 
-    % transitional slide from literature
-    % Talk about waypoint following with Prowler
-    \begin{frame}{Real-Time Implementation}
-      \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{../graphics/data_algo.png}
-      \end{minipage}
-      \begin{minipage}{0.45\textwidth}
-        \begin{itemize} \small
-          \item DRTK, TDCP errors analyzed by splitting single antenna between 2 receivers
-          \item Unmanned Following
-          \item Waypoint-based control
-          \item No intuitive method for quickly tuning algorithms \& visualizing errors
-        \end{itemize}
-      \end{minipage}
-    \end{frame}
-
-
-  \subsection{Design}
 
     %% ConOps
     \begin{frame}{Concept of Operation}
@@ -240,6 +246,52 @@
       \end{columns}
     \end{frame}
 
+      
+      % Position solution & path debugging features
+
+    \begin{frame}{Lateral Path Deviation}
+      \begin{figure}[ht] \centering
+        \includegraphics[width=7cm] {../graphics/devpts_diagram.png}
+      \end{figure}
+      \begin{columns}
+        \begin{column}{0.5\textwidth}
+          \begin{itemize} \scriptsize
+            \item Path truncated to two points nearest to follower.
+            \item Deviation calculated by magnitude of line intersecting last leg of path perpendicularly.
+          \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \begin{itemize} \scriptsize
+            \item Deviation independent of follower orientation relative to path.
+            \item Portion of path segment ahead of deviation point $(x_3,y_3)$ added to following distance
+          \end{itemize}          
+        \end{column}
+      \end{columns}
+    \end{frame}
+
+
+    \begin{frame}{Path Following Distance}
+      \begin{figure}[ht] \centering
+        \includegraphics[width=8cm] {../graphics/dist_diagram.png}
+      \end{figure}
+      \begin{columns}
+        \begin{column}{0.5\textwidth} \centering
+          \begin{displaymath} \tiny \centering
+            d_{stop}^{min} = \left( \frac {1} {\mu g} \right) \left(\frac {||v_{foll}||^2} {2} \right) \\
+            \mu_{warn} = 0.5 \\
+            \mu_{crit} = 1.0
+          \end{displaymath}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \begin{itemize} \scriptsize
+            \item Minimum stopping distance expressed as a function of surface friction and velocity
+            \item Use $\mu$ values for gravel, asphalt
+            \item Compare to present spacing along path
+          \end{itemize}
+        \end{column}
+      \end{columns}
+    \end{frame}
+
 
     \begin{frame}{Design Procedure}
 
@@ -259,10 +311,10 @@
         \item Leader always visible
         \item Most feature additions can be turned off
       \end{itemize}
-      
-      % Position solution & path debugging features
 
     \end{frame}
+
+
 
   %%% Qt GUI %%%%
   \subsection{Qt}
@@ -285,11 +337,53 @@
   %%% Google Earth GUI %%%
   \subsection{Earth}
 
+    \begin{frame}{Evaluation \& Reformulation}
+      \begin{columns}
+        \begin{column}{0.5\textwidth}
+          \vspace{-10pt}
+          \begin{figure}[ht] \centering
+            \includegraphics[width=0.7\columnwidth] {../graphics/bft_usage.jpg}
+          \end{figure}
+          \vspace{-10pt}
+          \begin{figure}[ht] \centering
+            \includegraphics[width=0.6\columnwidth] {../graphics/bft_mount_screen.jpg}
+          \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+          \begin{itemize} \footnotesize
+            \item End use tailored to military convoys
+            \begin{itemize} \tiny
+              \item Blue Force Tracking systems already in place
+              \item Design input sought from military technology personnel
+            \end{itemize} 
+            \item Visual stimuli other than black background needed
+            \item Reconcile screen with surroundings to build trust
+            \item Satellite imagery
+            \item Existing `real time' solution
+            \begin{itemize} \tiny
+              \item Update host vehicle's position quickly
+              \item Positions of other vehicles in convoy updated $\simeq~15~min$
+            \end{itemize}
+          \end{itemize}
+        \end{column}
+      \end{columns}
+    \end{frame}
+
+
+    \begin{frame}{Existing Solution}
+      \begin{figure}[ht] \centering
+        \includegraphics[width=0.8\textwidth] {../graphics/bft_path.jpg}
+        \caption{\footnotesize Blue Force Tracker displaying leader/follower path}
+      \end{figure}
+    \end{frame}
+
+
     \begin{frame}{Google Earth GUI --- Display}
       \begin{figure}
         \includegraphics[width=7.5cm]{../graphics/earth_display.png}
       \end{figure}
     \end{frame}
+
 
     \begin{frame}{Google Earth GUI --- Control}
       \begin{figure}[!htb] %% This is the best way to do this.
@@ -307,6 +401,7 @@
         \endminipage
       \end{figure}
     \end{frame}
+
 
     %% introduce interpolation
     \begin{frame}{Data Smoothing}
@@ -337,18 +432,17 @@
 
 \section{Experimentation}
 
-
   \begin{frame}{Tests Performed}
     \begin{figure}[ht] \centering
       \includegraphics[width=5cm] {../graphics/driver_view.jpg}
       \caption{\scriptsize View from the driver's seat}
     \end{figure}
     \vspace{-20pt}
-    \begin{itemize} \footnotesize
+    \begin{itemize} \scriptsize
       \item 11 individual test drivers
       \item Road friction coefficient values set to $\mu_{warn}=0.5,\mu_{crit}=1.0$ (for gravel, asphalt \citeitem{mu})
-      \item 3 testing procedures: 
-      \item Precision Following \& Zero Landmark Tests performed without driver assistance, as a control group.
+      \item 3 testing procedures (`lane change', `precision following', `zero landmark') performed with tools individually.
+      \item Precision Following \& Zero Landmark Tests also performed without driver assistance, as a control group.
     \end{itemize}
   \end{frame}
 
@@ -361,7 +455,7 @@
         \centering
         \includegraphics[width=4cm]{../graphics/lead_hardware.jpg}
       \end{minipage}
-      \vspace{-20pt}
+      % \vspace{-20pt}
       \begin{itemize}
         \item 3 vehicle platforms used: Infiniti G35 (sedan), Hyndai Sonata (SUV), Chevrolet Corvette (coupe)
         \item Novatel Propak v3 (OEMV board) L1/L2
@@ -439,7 +533,8 @@
         \includegraphics[width=10cm]{../graphics/precision_following_diagram.png}
       \end{figure}   
       \begin{itemize} \footnotesize
-        \item Two-lane track similar to US interstate.
+        \item Desired test to closely examine effects on lateral deviation 
+        \item NCAT test track (Opelika, AL) --- two-lane track similar to US interstate.
         \item Performed with each GUI individually, and without aid as control.
         \item Run with fewest combined alerts selected as `best' for each.
       \end{itemize}

@@ -185,11 +185,18 @@
 
     %% Display explanation
     % follower-forward is up on the screen
-    All information is displayed such the `up' on the display device corresponds to the positive longitudinal axis of the following vehicle.
+    All information is displayed such the `up' on the display device corresponds to the positive longitudinal axis of the following vehicle, as shown in Figure \ref{fig:mono_coord_sys}.
     % orientation of path and leader is determined using the follower course
-    Since the relative path is computed in ECEF coordinates and converted into relative ENU components, displaying points of interest relative to the follower's orientation is done by rotating them using the course measurement of the following vehicle's receiver. For low-dynamic scenarios, approximating heading as being equivalent to course provided adequate results.
+    Since the relative path is computed in ECEF coordinates and converted into relative ENU components, displaying points of interest relative to the follower's orientation is done by rotating them using the course measurement of the following vehicle's receiver. For low-dynamic scenarios in which a small angle approximation for sideslip is valid for all four tires, approximating heading as being equivalent to course provided adequate results.
+
     % orientation of leader course
     The orientation of the lead vehicle (represented with a simple square icon containing an arrow for its positive longitudinal axis) is then always shown relative to the following vehicle.  So if the leader is shown pointing to the right, the direction of its motion is then to the followers lateral axis and in the positive direction. 
+
+    \begin{figure}[ht] \centering
+      \includegraphics[width=0.7\columnwidth] {../graphics/mono_coord_sys.png}
+      \caption{Vehicle coordinate frame in the Qt GUI}
+      \label{fig:mono_coord_sys}
+    \end{figure}
 
 
   %% Earth %%
@@ -226,7 +233,7 @@
     For the path to be interpolated,  the same procedure for positions is carried out for each point in the vector. A problem arises when interpolating between timesteps with unequal numbers of points, as each point cannot then be interpolated as if it were travelling along a line. When a path length mismatch occurs between two successive updates, redundant points are added coincident with the rearmost path point until the two vectors are equal in length. When the number of points is decreasing, this alone would lead to a buildup of unnecessary data points, tying up valuable memory space and processing time. Thus, each time the length decreases and stays constant or continues decreasing for two or more timesteps, redundant points are removed from the saved vector.
 
     %% time update
-    While GNSS provides the ability to precisely synchronize systems, display smoothing must rely upon computer-specific timestamps as some machines will operate more slowly than others. Accordingly, when initial measurement messages arrive, the CPU time at which the content of each message packet was extracted is stored along with that content. It is important that CPU time is recorded upon extraction rather than upon completion of processing or transmission, as the goal of this process is to obscure lags incurred during calculation or radio transmission; the extraction (and assignment) time represents the earliest point when any portion of the rest of the GUI may then access that data to display it. The end result is that the user is presented with data which will change at a consistent frequency (as specified by the user), regardless of whether multiple sensors take varying amounts of time to relay or calculate data.
+    While GNSS provides the ability to precisely synchronize systems in time, display smoothing must rely upon computer-specific timestamps as some machines will operate more slowly than others. Accordingly, when initial measurement messages arrive, the CPU time at which the content of each message packet was extracted is stored along with that content. It is important that CPU time is recorded upon extraction rather than upon completion of processing or transmission, as the goal of this process is to obscure lags incurred during calculation or radio transmission; the extraction (and assignment) time represents the earliest point when any portion of the rest of the GUI may then access that data to display it. The end result is that the user is presented with data which will change at a consistent frequency (as specified by the user), regardless of whether multiple sensors take varying amounts of time to relay or calculate data.
 
     % \begin{figure}[ht] \centering
     %   \includegraphics[width=\columnwidth]{../graphics/middleware_diagram.png}
@@ -246,7 +253,8 @@
 
   Experimental trials were conducted using three different testing scenarios: the lane-change test, the precision following test, and the zero landmark test.  These are explained in detail below.
   %% Hardware
-  Two vehicles were used: an Infiniti G35 as the leader, and a Chevrolet Corvette as the follower, both equipped with NovAtel Propak v3 receivers (using OEMV chips).  The DRTK and TDCP estimators utilized both L1 and L2 signals, from GPS satellites only.  Raw pseudorange and carrier information was broadcast directly from the lead receiver to the navigation computer in the following vehicle using two 900 MHz radios.  To prevent the length of the vehicles from introducing constant biases into the estimate of longitudinal curvilinear spacing, the lead vehicle's antenna was placed on the most rearward horizontal surface and the following vehicle's antenna was placed on the most forward horizontal surface.
+  Two vehicles were used: an Infiniti G35 as the leader, and a Chevrolet Corvette as the follower, both equipped with NovAtel Propak v3 receivers (using OEMV chips).  The DRTK and TDCP estimators utilized both L1 and L2 signals, from GPS satellites only.  Raw pseudorange and carrier information was broadcast directly from the lead receiver to the navigation computer in the following vehicle using two 900 MHz radios.
+  %To prevent the length of the vehicles from introducing constant biases into the estimate of longitudinal curvilinear spacing, the lead vehicle's antenna was placed on the most rearward horizontal surface and the following vehicle's antenna was placed on the most forward horizontal surface.
   % display
   A single laptop computer was used for the differential GPS calculations as well as the display control. This was placed in the following vehicle in direct view of the driver, as shown in Figure \ref{fig:driver_view}.
 
@@ -269,18 +277,18 @@
     To produce pass-fail results, a maneuver common in typical roadway driving, the lane change, was used in a situation in which the maneuver could be replicated properly or improperly to produce a binary result.  This test takes place on the National Center for Asphalt Technology (NCAT) test track in Opelika, AL, which is a two lane, 1.7 mile oval with turns comparable to those found on an interstate highway.  The leader drives through a $180^{\circ}$ turn and upon exiting makes a lane change between any of six cones spaced $10~m$ apart along the center stripe at the start of the straightaway.  This event is visually obscured from the following driver, who has no foreknowledge of which cone pair will be chosen, so there is a 20\% chance of choosing the correct pair simply by guessing.  The following driver was not given a specified speed at which to perform the test.
 
     \begin{table}[htbp] \centering
-      \caption{Cone pairs chosen in the lane change replication test}
-      \begin{tabular}{rc|cc} 
-        GUI&    Run \#  &     Leader&    Follower \\\hline\hline
-        Earth&      1       &       1   &    3 \\
-             &      2       &       3   &    4 \\ \hline
-        Qt   &      3       &       2   &    3 \\
-             &      4       &       5   &    5 \\ \hline   
+      \caption{Results of the lane change replication test}
+      \begin{tabular}{rc|c}
+        GUI&    Driver \#&     Overshoot \\\hline\hline
+        Earth&      1       &       $+20m$  \\
+             &      2       &       $+10m$  \\ \hline
+        Qt   &      3       &       $+10m$  \\
+             &      4       &       $0m$    \\ \hline  
       \end{tabular}
       \label{tab:lanechangeresults}
     \end{table}
 
-    In all cases where an incorrect cone pair was chosen, the follower changed lanes later than did the leader.  This indicates that the latency accumulated from the radios as well as the middleware database caused the driver to overshoot the lane change.
+    In all cases where an incorrect cone pair was chosen, the follower changed lanes later than did the leader.  This indicates that the latency accumulated from the radios as well as the middleware database caused the driver to overshoot the lane change.  This is further reinforced by the fact that all drivers slowed to a ground speed of less than $10m/s$ when attempting the maneuver, indicating they were waiting for the data onscreen to `catch up'.  The lag caused drivers to overshoot the correct cone pair in all cases where an incorrect maneuver was made, as detailed in Table \ref{tab:lanechangeresults}.
 
 
   %% Precision Following Test %%
@@ -290,7 +298,7 @@
     The lane change replication test is one example of implementing the path duplication tool, but does not produce the detailed results necessary for a formal conclusion favoring the usefulness of one GUI over the other.  Centimeter-level measurements are available, so it is of great interest to determine whether either tool enables a convoy driver to carry out the following task with this improved level of precision.
     
     % description
-    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  Along the two $180^{\circ}$ turns the lead vehicle maintains a ground speed of approximately $45~mph$, and approximately $65~mph$ along the straightaways.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts and accumulate as little deviation over time as possible.
+    The precision following test begins and ends with both vehicles parked atop the center stripe of the NCAT test track.  The lead vehicle accelerates to approximately 45 mph then begins a sinusoidal path with a mean about the center stripe, a period of approximately $10~s$, and an amplitude that puts the wheels of the lead vehicle upon the outermost lane marking at the peaks.  During both the straight portions and the turns, the lead vehicle's speed oscillates between 45 and 65 miles per hour.  Throughout the test, the following driver is attempting to maintain a inter-vehicular spacing as low as possible without incurring any distance alerts and accumulate as little deviation over time as possible.
 
     Figure \ref{fig:precision_following_alert_percents} shows the results from the best runs of the precision following test for both tools, as well as a control with no path assistance. The left pane shows for what percentage of all timesteps an alert was issued for path deviation, and the pane on the right shows the same information for following distance alerts.
 
@@ -304,7 +312,7 @@
     This test primarily focused on distinguishing which GUI best provided aid in path duplication; for a comparative analysis, the test was conducted with the aid of each GUI individually, then without any assistance information at all.  As this test was conducted in an environment equivalent to most American two-lane roads and the leader does not stray from the two outer lane markings, it was anticipated that the lateral deviation should be bounded by approximately the width of the road minus the track width of the widest vehicle, or $5.8~m$.  This allows for scrutiny of the deviation in greater detail than when the lateral deviation is not bounded by design, as in the probability density function estimates shown in Figure \ref{fig:pdf_pf_dev}.
 
     \begin{figure}[ht] \centering
-      \includegraphics[width=\columnwidth]{../graphics/pdf_precision_following_deviation.png}
+      \includegraphics[width=\columnwidth]{../graphics/precision_following_dev_pdf.png}
       \caption{Probability density estimate function for lateral deviation over the best run of the precision following test}
       \label{fig:pdf_pf_dev}
     \end{figure}
@@ -326,7 +334,7 @@
   \subsection*{Zero-Landmark Test}
 
     % motivation
-    The precision following test took place in an environment abundant in visual landmarks by which to localize, such as lane markings and road signs.  Given the motivation for these tools, it is necessary to examine the performance of both GUIs in a situation where this type of assistance is denied.  The zero landmark test was therefore constructed to determine the impact of removing visual awareness of surroundings as well as waypoints along the leader'ss path to assist in replicating it.
+    The precision following test took place in an environment abundant in visual landmarks by which to localize, such as lane markings and road signs.  Given the motivation for these tools, it is necessary to examine the performance of both GUIs in a situation where this type of assistance is denied.  The zero landmark test was therefore constructed to determine the impact of removing visual awareness of surroundings as well as waypoints along the leader's path to assist in replicating it.
     
     \begin{figure}[ht] \centering
       \includegraphics[width=\columnwidth]{../graphics/zero_landmark_alert_percents.png}
@@ -335,7 +343,7 @@
     \end{figure}
 
     % test description
-    Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended to `'present a path which is difficult to follow while the following vehicle attempted to adhere to the path as close as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
+    Both vehicles began parked in a large, open expanse of flat asphalt (`skidpad') with excellent satellite visibility.  There are no clearly visible artifacts upon the ground, though some objects are visible at the outer edges of the skidpad.  To further obscure visual following, the test was conducted at night.  The lead vehicle drove in chaotic patterns intended to present a path which is difficult to follow while the following vehicle attempted to adhere to the path as close as possible and maintain the closest possible curvilinear separation distance without triggering any alert messages.
 
     % PDF of dev
     \begin{figure}[ht] \centering
@@ -353,7 +361,7 @@
       \label{fig:pdf_zl_mu}
     \end{figure}
 
-    With no other reference, drivers were most likely to over- or under-correct for path deviations when using the visual tools, and due to lag in the system, had delayed reaction times. This resulted in a greater distribution of deviations as compared to control runs, as seen in Figure \ref{fig:pdf_zl_dev}. However, due to the radical nature of the course changes, biases were much more likely to arise (i.e., in the best control run, the driver was more likely to deviate to the left). Both GUI's were successful at eliminating this bias, resulting in probability densities of lateral deviation which were evenly distributed about zero.
+    With no other reference, drivers were most likely to over-correct for path deviations when using the visual tools, and due to lag in the system, had delayed reaction times. This resulted in a greater distribution of deviations as compared to control runs, as seen in Figure \ref{fig:pdf_zl_dev}. However, due to the radical nature of the course changes, biases were much more likely to arise (i.e., in the best control run, the driver was more likely to deviate to the left). Both GUI's were successful at eliminating this bias, resulting in probability densities of lateral deviation which were evenly distributed about zero.
 
 
 
@@ -370,7 +378,7 @@
       \label{tab:dev_mean}
     \end{table}
     
-    Figure \ref{fig:pdf_zl_mu} shows how remaining further behind the lead vehicle while using the graphical tools to replicate paths resulted in significantly lower surface friction required to stop without experiencing a rear end collision. Distance alerts were eliminated altogether when using either of the two graphical tools.
+    Figure \ref{fig:pdf_zl_mu} shows how remaining further behind the lead vehicle while using the graphical tools to replicate paths resulted in significantly lower surface friction required to stop without experiencing a rear end collision. Distance alerts were eliminated altogether when using either of the two graphical tools. This can be seen in the chart detailing cumulative alerts for the zero landmark test in Figure \ref{fig:zero_landmark_alert_percents}.
 
 
 
@@ -384,10 +392,10 @@
   Two graphical tools were developed to assist drivers in convoys with high fidelity to the lead vehicle's path while maintaining a safe spacing between them.  Experimentation reveals that they were quite effective in helping to enforce safe curvilinear following distances, while more development is needed to optimize results for lateral path deviation.  
 
   %% improvements - overlay prediction
-  The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the follower's path in real time given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately $1.0~s$ required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window`' but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
+  The zero landmark test was by far the most successful in garnering qualitative feedback.  Drivers suggested a projected path overlay which gave a prediction of the follower's path in real time given course and yaw rate information.  This would counter the effects of being unable to tell how present actions would effect deviation in the approximately $1.0~s$ required for steering input to be reflected in either GUI.  Furthermore, it was suggested, a model prediction scheme as in \cite{williamthesis} could be employed to show not only predicted path over some window, but estimate the current position and overlay it.  Future work will pursue adding these improvements to the Qt GUI and continuing to refine that tool, as it has been shown more successful than the Earth GUI at accomplished the goals outlined herein.
 
   %% add SA for the whole caravan - Yuma
-  At present, a middleware with much lower latency is being integrated into the system, and testing shows improvement.  The single pair scenario is being expanded upon, and a communications strategy for three or more vehicles is being developed.  In addition, fusion of GNSS with magnetometry for more accurate heading determination and RADAR for more accurate separation estimation is being estimated.
+  At present, a middleware with much lower latency is being integrated into the system, and testing shows improvement.  The single pair scenario is being expanded upon, and a communications strategy for three or more vehicles is being developed.  An examination of platform-dependence is being carried out to determine the extensibility to non-Ackermann vehicles (e.g., tanks). In addition, fusion of GNSS with magnetometry for more accurate heading determination and RADAR for more accurate separation estimation is being investigated.
   %% magnetometry for course/heading
 
 
